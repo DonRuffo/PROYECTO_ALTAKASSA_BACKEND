@@ -1,5 +1,5 @@
 {
-  "name": "altakassa",
+  "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -13,7 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "altakassa": "file:",
+    "backend": "file:",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
