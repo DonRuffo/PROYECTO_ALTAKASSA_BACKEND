@@ -17,6 +17,7 @@ app.set('port', process.env.PORT || 3000)
 
 app.use('/api',RouterAdmin)
 app.use('/api', routeProveedor)
+app.get('/', (req, res)=>{res.send("Servidor levantado")})
 
 app.use((req,res)=> res.status(400).send("Endpoint no encontrado"))
 
