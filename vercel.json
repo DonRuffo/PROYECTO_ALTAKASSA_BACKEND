@@ -3,24 +3,8 @@
     "builds": [
       { "src": "src/index.js", "use": "@vercel/node" }
     ],
-    "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "http://localhost:4000"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET,POST,PUT,DELETE"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type,Authorization"
-        }
-      ]
-    }
-  ]
+    "routes": [
+      { "src": "/(.*)", "dest": "src/index.js" }
+    ]
 }
   
