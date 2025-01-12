@@ -37,6 +37,7 @@ const Proveedor = new Schema({
     profesiones:{
         type:String,
         require: true,
+        default: null
     },
     contrasenia:{
         type:String,
