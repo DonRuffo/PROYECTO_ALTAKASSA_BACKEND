@@ -10,18 +10,24 @@ const app = express()
 app.use(express.json())
 
 
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:4000', // Reemplaza con el origen de tu aplicación frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+};
+
+app.use(cors(corsOptions));
 
 
 app.use(morgan('dev'))
 
 app.set('port', process.env.PORT || 3000)
 
-app.use('/api',RouterAdmin)
+app.use('/api', RouterAdmin)
 app.use('/api', routeProveedor)
-app.get('/', (req, res)=>{res.send("Servidor levantado")})
+app.get('/', (req, res) => { res.send("Servidor levantado") })
 
 
-app.use((req,res)=> res.status(400).send("Endpoint no encontrado"))
+app.use((req, res) => res.status(400).send("Endpoint no encontrado"))
 
 export default app
