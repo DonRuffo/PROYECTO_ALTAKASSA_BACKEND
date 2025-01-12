@@ -5,11 +5,6 @@ import cors from 'cors';
 import RouterAdmin from './routers/RouterAdmin.js';
 import routeProveedor from './routers/RouterProveedor.js';
 
-dotenv.config()
-const app = express()
-app.use(express.json())
-
-
 const corsOptions = {
     origin: 'http://localhost:4000', // Reemplaza con el origen de tu aplicación frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
@@ -18,6 +13,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+dotenv.config()
+const app = express()
+app.use(express.json())
 
 app.use(morgan('dev'))
 
