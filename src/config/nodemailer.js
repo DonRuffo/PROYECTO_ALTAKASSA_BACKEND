@@ -19,10 +19,11 @@ const sendMailToAdmin = (userMail, token) => {
       from: process.env.USER_MAILTRAP,
       to: userMail,
       subject: "Verifica tu cuenta",
-      html: `<p>Hola, haz clic <a href="${process.env.URL_BACKEND}confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
+      html: `<p>Hola, haz clic <a href="http://localhost:4000/confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
   };
   
-
+//http://localhost:4000/
+//${process.env.URL_BACKEND}
   transporter.sendMail(mailOptions, function(error, info){
       if (error) {
           console.log(error);

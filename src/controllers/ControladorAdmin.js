@@ -43,7 +43,7 @@ const login = async (req, res) => {
     if (AdminBDD?.confirmEmail == false) return res.status(400).json({ msg: "Lo sentimos, debe verificar su cuenta" })
     if (!AdminBDD) return res.status(403).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" })
 
-    const verificarPassword = AdminBDD.CompararContra(contrasenia)
+    const verificarPassword = await AdminBDD.CompararContra(contrasenia)
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
     const token = generarJWT(AdminBDD._id, "Administrador")

@@ -43,7 +43,7 @@ const loginProve = async (req, res) => {
     if (ProveBDD?.confirmarEmail == false) return res.status(400).json({ msg: "Lo sentimos, debe verificar su cuenta" })
     if (!ProveBDD) return res.status(403).json({ msg: "Lo sentimos, el proveedor no se encuentra registrado" })
 
-    const verificarPassword = ProveBDD.CompararContra(contrasenia)
+    const verificarPassword = await ProveBDD.CompararContra(contrasenia)
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
     const token = generarJWT(ProveBDD._id, "Proveedor")
@@ -52,7 +52,7 @@ const loginProve = async (req, res) => {
         ProveBDD,
         token
     }
-    res.status(200).json(nuevoToken)
+    res.status(200).json({nuevoToken, msg:"Acceso correcto"})
 }
 
 const ActualizarPerfilProveedor = async (req, res) => {
