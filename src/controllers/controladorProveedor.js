@@ -47,12 +47,11 @@ const loginProve = async (req, res) => {
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
     const token = generarJWT(ProveBDD._id, "Proveedor")
-
-    const nuevoToken = {
+    
+    res.status(200).json({
         ProveBDD,
         token
-    }
-    res.status(200).json({nuevoToken, msg:"Acceso correcto"})
+    })
 }
 
 const ActualizarPerfilProveedor = async (req, res) => {

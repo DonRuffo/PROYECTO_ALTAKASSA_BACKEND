@@ -30,10 +30,6 @@ const Proveedor = new Schema({
         unique:true,
         default:null
     },
-    fechaNacimiento:{
-        type:Date,
-        require:true
-    },
     profesiones:{
         type:String,
         require: true,
