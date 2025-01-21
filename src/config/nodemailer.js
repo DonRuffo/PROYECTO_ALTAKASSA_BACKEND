@@ -39,7 +39,7 @@ const sendMailToAdminRestore = (userMail, token) => {
       from: process.env.USER_MAILTRAP,
       to: userMail,
       subject: "Recupera tu cuenta",
-      html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}recuperar/${encodeURIComponent(token)}">aquí</a> para restablecer tu contraseña.</p>`
+      html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}restablecer/${encodeURIComponent(token)}">aquí</a> para restablecer tu contraseña.</p>`
   };
   
 
