@@ -26,12 +26,12 @@ const confirmarEmail = async (req, res) => {
 
     if (!(token)) return res.status(400).json({ msg: "Lo sentimos no se puede validar la cuenta" })
 
-    const ProveBDD = await Proveedor.findOne({ token })
-    if (!ProveBDD?.token) return res.status(400).json({ msg: "La cuenta ya a sido confirmada" })
+    const ProveedorBDD = await Proveedor.findOne({ token })
+    if (!ProveedorBDD?.token) return res.status(400).json({ msg: "La cuenta ya a sido confirmada" })
 
-    ProveBDD.token = null
-    ProveBDD.confirmarEmail = true
-    await ProveBDD.save()
+    ProveedorBDD.token = null
+    ProveedorBDD.confirmarEmail = true
+    await ProveedorBDD.save()
     res.status(200).json({ msg: "Token confirmado, ya puedes iniciar sesión" })
 }
 const loginProve = async (req, res) => {
@@ -39,17 +39,17 @@ const loginProve = async (req, res) => {
 
     if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debe llenar todos los campos" })
 
-    const ProveBDD = await Proveedor.findOne({ email })
-    if (ProveBDD?.confirmarEmail == false) return res.status(400).json({ msg: "Lo sentimos, debe verificar su cuenta" })
-    if (!ProveBDD) return res.status(403).json({ msg: "Lo sentimos, el proveedor no se encuentra registrado" })
+    const ProveedorBDD = await Proveedor.findOne({ email })
+    if (ProveedorBDD?.confirmarEmail == false) return res.status(400).json({ msg: "Lo sentimos, debe verificar su cuenta" })
+    if (!ProveedorBDD) return res.status(403).json({ msg: "Lo sentimos, el proveedor no se encuentra registrado" })
 
-    const verificarPassword = await ProveBDD.CompararContra(contrasenia)
+    const verificarPassword = await ProveedorBDD.CompararContra(contrasenia)
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
-    const token = generarJWT(ProveBDD._id, "Proveedor")
+    const token = generarJWT(ProveedorBDD._id, "Proveedor")
     
     res.status(200).json({
-        ProveBDD,
+        ProveedorBDD,
         token
     })
 }
@@ -57,27 +57,27 @@ const loginProve = async (req, res) => {
 const ActualizarPerfilProveedor = async (req, res) => {
     const { email } = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
-    const ProveBDD = await Proveedor.findOne({ email })
-    if (!ProveBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
+    const ProveedorBDD = await Proveedor.findOne({ email })
+    if (!ProveedorBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
     Object.keys(req.body).forEach((key) => {
         if (key !== "contrasenia" && req.body[key]) {
-            ProveBDD[key] = req.body[key];
+            ProveedorBDD[key] = req.body[key];
         }
     });
-    await ProveBDD.save()
-    res.status(200).json({ msg: "Cambios guardados", ProveBDD })
+    await ProveedorBDD.save()
+    res.status(200).json({ msg: "Cambios guardados", ProveedorBDD })
 }
 
 const ActualizarContraseniaProve = async(req, res)=>{
     const {email, contrasenia, nuevaContrasenia} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
-    const ProveBDD = await Proveedor.findOne({email})
-    if (!ProveBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
-    const Verificacion = await ProveBDD.CompararContra(contrasenia)
+    const ProveedorBDD = await Proveedor.findOne({email})
+    if (!ProveedorBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
+    const Verificacion = await ProveedorBDD.CompararContra(contrasenia)
     if(!Verificacion) return res.status(404).json({msg:"La contraseña actual no es correcta"})
-    const EncriptarContra = await ProveBDD.EncriptarContrasenia(nuevaContrasenia)
-    ProveBDD.contrasenia = EncriptarContra
-    await ProveBDD.save()
+    const EncriptarContra = await ProveedorBDD.EncriptarContrasenia(nuevaContrasenia)
+    ProveedorBDD.contrasenia = EncriptarContra
+    await ProveedorBDD.save()
     res.status(200).json({msg:"Contraseña actualizada"})
 }
 //-----------------------------------------------------------------------------------------------
@@ -106,6 +106,16 @@ const ConfirmarRecuperarContrasenia = async (req, res) =>{
     ProveedorBDD.status = true
     await ProveedorBDD.save()
     res.status(200).json({msg:"Contraseña restablecida con éxito"})
+}
+
+
+const Perfil = async (req, res) =>{
+    delete req.ProveedorBDD.token
+    delete req.ProveedorBDD.confirmEmail
+    delete req.ProveedorBDD.createdAt
+    delete req.ProveedorBDD.updatedAt
+    delete req.ProveedorBDD.__v
+    res.status(200).json(req.ProveedorBDD)
 }
 
 /* Para Sprint 4
@@ -139,6 +149,7 @@ const CancelarTrabajosAgendados = async (req, res) =>{
 
 export {
     registroProve,
+    Perfil,
     confirmarEmail,
     loginProve,
     ActualizarPerfilProveedor,
