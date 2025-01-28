@@ -58,15 +58,15 @@ const ClienteSchema = new Schema({
     timestamps:true
 })
 
-ClienteSchema.methods.EncriptarContrasenia = async (password) =>{
-    const nivelSal = 10
-    const contraEncriptada = await bcrypt.hash(password, nivelSal)
-    return contraEncriptada
+ClienteSchema.methods.EncriptarContrasenia = async function(password){
+    const nivelSal = await bcrypt.genSalt(10)
+    const ContraEncriptada = await bcrypt.hash(password, nivelSal)
+    return ContraEncriptada
 }
 
-ClienteSchema.methods.CompararContrasenia = async (password) =>{
-    const Comparacion = await bcrypt.compare(password, this.password)
-    return Comparacion
+ClienteSchema.methods.CompararPasswordCliente = async function(password){
+    const comparacion = await bcrypt.compare(password, this.contrasenia)
+    return comparacion
 }
 
 ClienteSchema.methods.GenerarToken = function(){

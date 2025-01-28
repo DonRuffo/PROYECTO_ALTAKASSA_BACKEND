@@ -1,6 +1,6 @@
 import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js";
 import ModeloAdmin from "../modules/ModeloAdmin.js";
-import generarJWT from "../helpers/crearJWT.js"
+import generarJWT from "../helpers/crearJWT.js";
 //import { LiaEtsy } from "react-icons/lia";
 
 const register = async (req, res) => {
