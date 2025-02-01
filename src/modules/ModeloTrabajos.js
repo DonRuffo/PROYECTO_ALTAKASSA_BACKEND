@@ -1,5 +1,4 @@
 import mongoose, {Schema, model} from 'mongoose';
-mongoose
 const TrabajosSchema = new Schema({
     cliente:{
         type:mongoose.Schema.Types.ObjectId,
@@ -9,9 +8,10 @@ const TrabajosSchema = new Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Proveedor"
     },
-    servicio:{
-        type:String,
-        require:true
+    oferta: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ofertas",
+        required: true
     },
     fecha:{
         type:Date,
@@ -23,11 +23,19 @@ const TrabajosSchema = new Schema({
         type:String,
         require:true,
         trim:true,
-        default:"Agendada"
+        default:"En espera"
     },
-    precio:{
-        type:Number,
+    tipo:{
+        type:String,
         require:true
+    },
+    desde:{
+        type: String,
+        default:'08:00'
+    },
+    hasta:{
+        type: String,
+        default: '17:00'
     },
     calificacionCliente:{
         type:Number,
