@@ -6,22 +6,20 @@ import { confirmarEmail,
     ComprobarParaRestablecer, 
     ActualizarPerfilAdministrador,
     ActualizarContrasenia } from "../controllers/ControladorAdmin.js";
+import verificarAutenticacion from "../middleware/autenticacion.js";
 
 
 const router = Router()
 
+//publicas
 router.post('/registro',register)
-
 router.get('/confirmar/:token',confirmarEmail)
-
 router.post('/login', login)
-
 router.post('/recuperar-contrasenia', RecuperarContraseña)
-
 router.get('/restablecer-contrasenia/:token', ComprobarParaRestablecer)
 
-router.post('/actualizar-perfil', ActualizarPerfilAdministrador)
-
-router.post('/actualizar-contrasenia', ActualizarContrasenia)
+//privadas
+router.post('/actualizar-perfil', verificarAutenticacion, ActualizarPerfilAdministrador)
+router.post('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrasenia)
 
 export default router

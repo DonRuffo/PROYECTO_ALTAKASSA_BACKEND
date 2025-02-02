@@ -2,6 +2,8 @@ import Proveedor from "../modules/ModeloProveedor.js";
 import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js";
 import generarJWT from "../helpers/crearJWT.js"
 //import { LiaEtsy } from "react-icons/lia";
+import mongoose from "mongoose";
+
 
 const registroProve = async (req, res) => {
     const { email, contrasenia } = req.body
@@ -108,6 +110,15 @@ const ConfirmarRecuperarContrasenia = async (req, res) =>{
     res.status(200).json({msg:"Contraseña restablecida con éxito"})
 }
 
+const detalleProveedor = async(req,res)=>{
+    const {id} = req.params
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, debe ser un id válido`});
+    const proveedorBDD = await Proveedor.findById(id).select("-password")
+    if(!proveedorBDD) return res.status(404).json({msg:`Lo sentimos, no existe el proveedor ${id}`})
+    res.status(200).json({msg:proveedorBDD})
+}
+
+
 
 const Perfil = async (req, res) =>{
     delete req.ProveedorBDD.token
@@ -155,5 +166,6 @@ export {
     ActualizarPerfilProveedor,
     ActualizarContraseniaProve,
     RecuperarContrasenia,
-    ConfirmarRecuperarContrasenia
+    ConfirmarRecuperarContrasenia,
+    detalleProveedor
 }

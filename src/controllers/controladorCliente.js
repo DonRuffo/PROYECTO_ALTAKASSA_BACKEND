@@ -1,6 +1,7 @@
 import ModeloCliente from "../modules/ModeloCliente.js";
 import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js";
 import generarJWT  from "../helpers/crearJWT.js";
+import mongoose from "mongoose";
 
 const registroCliente = async (req, res) => {
     const { email, contrasenia } = req.body
@@ -109,6 +110,15 @@ const ConfirmarRecuperarContrasenia = async (req, res) =>{
 }
 
 
+const detalleCliente = async(req,res)=>{
+    const {id} = req.params
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, debe ser un id válido`});
+    const clienteBDD = await ModeloCliente.findById(id).select("-password")
+    if(!clienteBDD) return res.status(404).json({msg:`Lo sentimos, no existe el cliente ${id}`})
+    res.status(200).json({msg:clienteBDD})
+}
+
+
 const Perfil = async (req, res) =>{
     delete req.ClienteBDD.token
     delete req.ClienteBDD.confirmEmail
@@ -126,5 +136,6 @@ export {
     ActualizarPerfilCliente,
     ActualizarContraseniaCliente,
     RecuperarContrasenia,
-    ConfirmarRecuperarContrasenia
+    ConfirmarRecuperarContrasenia,
+    detalleCliente
 }
