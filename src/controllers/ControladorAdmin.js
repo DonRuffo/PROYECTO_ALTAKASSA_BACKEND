@@ -50,7 +50,8 @@ const login = async (req, res) => {
 
     const nuevoToken = {
         AdminBDD,
-        token
+        token,
+        rol:'administrador'
     }
     res.status(200).json(nuevoToken)
 }
@@ -107,6 +108,15 @@ const ActualizarContrasenia = async(req, res)=>{
     res.status(200).json({msg:"Contraseña actualizada"})
 }
 
+const Perfil = async (req, res) =>{
+    delete req.AdminBDD.token
+    delete req.AdminBDD.confirmEmail
+    delete req.AdminBDD.createdAt
+    delete req.AdminBDD.updatedAt
+    delete req.AdminBDD.__v
+    res.status(200).json(req.AdminBDD)
+}
+
 export {
     register,
     confirmarEmail,
@@ -114,5 +124,6 @@ export {
     RecuperarContraseña,
     ComprobarParaRestablecer,
     ActualizarPerfilAdministrador,
-    ActualizarContrasenia
+    ActualizarContrasenia,
+    Perfil
 }

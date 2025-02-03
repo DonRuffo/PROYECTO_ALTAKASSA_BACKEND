@@ -51,7 +51,8 @@ const loginCliente = async (req, res) => {
     
     res.status(200).json({
         ClienteBDD,
-        token
+        token,
+        rol:'cliente'
     })
 }
 

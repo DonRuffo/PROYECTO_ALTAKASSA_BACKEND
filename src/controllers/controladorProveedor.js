@@ -52,7 +52,8 @@ const loginProve = async (req, res) => {
     
     res.status(200).json({
         ProveedorBDD,
-        token
+        token,
+        rol:'proveedor'
     })
 }
 
