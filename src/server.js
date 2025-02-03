@@ -5,6 +5,8 @@ import cors from 'cors';
 import RouterAdmin from './routers/RouterAdmin.js';
 import routeProveedor from './routers/RouterProveedor.js';
 import routeCliente from './routers/RouterCliente.js';
+import routerOfertas from './routers/RouterOfertas.js';
+
 const app = express()
 const corsOptions = {
     origin: 'http://localhost:5173', // Reemplaza con el origen de tu aplicación frontend
@@ -23,6 +25,8 @@ app.set('port', process.env.PORT || 3000)
 app.use('/api', RouterAdmin)
 app.use('/api', routeProveedor)
 app.use('/api',routeCliente)
+app.use('/api', routerOfertas)
+
 app.get('/', (req, res) => { res.send("Servidor levantado") })
 
 

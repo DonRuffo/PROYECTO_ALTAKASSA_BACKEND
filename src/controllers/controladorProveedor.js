@@ -115,7 +115,7 @@ const detalleProveedor = async(req,res)=>{
     if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, debe ser un id válido`});
     const proveedorBDD = await Proveedor.findById(id).select("-password")
     if(!proveedorBDD) return res.status(404).json({msg:`Lo sentimos, no existe el proveedor ${id}`})
-    res.status(200).json({msg:proveedorBDD})
+    res.status(200).json(proveedorBDD)
 }
 
 

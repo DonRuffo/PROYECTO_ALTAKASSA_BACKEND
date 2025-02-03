@@ -19,7 +19,7 @@ const sendMailToAdmin = (userMail, token) => {
       from: process.env.USER_MAILTRAP,
       to: userMail,
       subject: "Verifica tu cuenta",
-      html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
+      html: `<p>Hola , haz clic <a href="${process.env.URL_FRONTEND}confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
   };
   
 //http://localhost:4000/

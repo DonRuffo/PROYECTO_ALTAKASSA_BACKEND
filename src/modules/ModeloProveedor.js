@@ -1,4 +1,4 @@
-import {Schema, model} from 'mongoose';
+import mongoose, {Schema, model} from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const Proveedor = new Schema({
@@ -54,7 +54,13 @@ const Proveedor = new Schema({
     calificacion:{
         type:Number,
         default:null
-    }
+    },
+    oferta:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Ofertas'
+        }
+    ]
 },
 {
     timestamps:true
