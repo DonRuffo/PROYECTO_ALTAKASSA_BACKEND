@@ -6,6 +6,7 @@ import RouterAdmin from './routers/RouterAdmin.js';
 import routeProveedor from './routers/RouterProveedor.js';
 import routeCliente from './routers/RouterCliente.js';
 import routerOfertas from './routers/RouterOfertas.js';
+import routerTrabajos from './routers/RouterTrabajos.js';
 
 const app = express()
 const corsOptions = {
@@ -26,6 +27,7 @@ app.use('/api', RouterAdmin)
 app.use('/api', routeProveedor)
 app.use('/api',routeCliente)
 app.use('/api', routerOfertas)
+app.use('/api', routerTrabajos)
 
 app.get('/', (req, res) => { res.send("Servidor levantado") })
 

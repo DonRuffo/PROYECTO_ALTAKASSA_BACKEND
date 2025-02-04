@@ -14,7 +14,7 @@ const verificarAutenticacion = async (req, res, next) => {
             next()
         }
         else if (rol === "cliente") {
-            req.ClienteBDD = await Cliente.findById(id).lean().select("-contrasenia")
+            req.clienteBDD = await Cliente.findById(id).lean().select("-contrasenia")
             next()
         }
         else if (rol === "proveedor") {
