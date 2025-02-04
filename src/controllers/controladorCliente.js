@@ -123,12 +123,12 @@ const detalleCliente = async(req,res)=>{
 
 
 const Perfil = async (req, res) =>{
-    delete req.ClienteBDD.token
-    delete req.ClienteBDD.confirmEmail
-    delete req.ClienteBDD.createdAt
-    delete req.ClienteBDD.updatedAt
-    delete req.ClienteBDD.__v
-    res.status(200).json(req.ClienteBDD)
+    delete req.clienteBDD.token
+    delete req.clienteBDD.confirmEmail
+    delete req.clienteBDD.createdAt
+    delete req.clienteBDD.updatedAt
+    delete req.clienteBDD.__v
+    res.status(200).json(req.clienteBDD)
 }
 
 export {
