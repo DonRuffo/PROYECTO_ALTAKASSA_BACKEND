@@ -47,11 +47,13 @@ const loginCliente = async (req, res) => {
     const verificarPassword = await ClienteBDD.CompararPasswordCliente(contrasenia)
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
-    const token = generarJWT(ClienteBDD._id, "Cliente")
+    const token = generarJWT(ClienteBDD._id, "cliente")
+    
+    const {_id} = ClienteBDD
     
     res.status(200).json({
-        ClienteBDD,
         token,
+        _id,
         rol:'cliente'
     })
 }
@@ -114,9 +116,9 @@ const ConfirmarRecuperarContrasenia = async (req, res) =>{
 const detalleCliente = async(req,res)=>{
     const {id} = req.params
     if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, debe ser un id válido`});
-    const clienteBDD = await ModeloCliente.findById(id).select("-password")
-    if(!clienteBDD) return res.status(404).json({msg:`Lo sentimos, no existe el cliente ${id}`})
-    res.status(200).json({msg:clienteBDD})
+    const ClienteBDD = await ModeloCliente.findById(id).select("-password")
+    if(!ClienteBDD) return res.status(404).json({msg:`Lo sentimos, no existe el cliente ${id}`})
+    res.status(200).json({msg:ClienteBDD})
 }
 
 

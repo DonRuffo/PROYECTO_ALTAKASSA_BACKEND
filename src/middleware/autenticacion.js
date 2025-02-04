@@ -9,16 +9,16 @@ const verificarAutenticacion = async (req, res, next) => {
     const { authorization } = req.headers
     try {
         const { id, rol } = jwt.verify(authorization.split(' ')[1], process.env.JWT_SECRET)
-        if (rol === "Administrador") {
+        if (rol === "administrador") {
             req.AdminBDD = await Administrador.findById(id).lean().select("-contrasenia")
             next()
         }
-        else if (rol === "Cliente") {
+        else if (rol === "cliente") {
             req.ClienteBDD = await Cliente.findById(id).lean().select("-contrasenia")
             next()
         }
-        else if (rol === "Proveedor") {
-            req.ProveedorBDD = await Proveedor.findById(id).lean().select("-contrasenia")
+        else if (rol === "proveedor") {
+            req.proveedorBDD = await Proveedor.findById(id).lean().select("-contrasenia")
             next()
         }
         else {

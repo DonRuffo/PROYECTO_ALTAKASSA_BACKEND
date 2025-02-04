@@ -46,14 +46,15 @@ const login = async (req, res) => {
     const verificarPassword = await AdminBDD.CompararContra(contrasenia)
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
-    const token = generarJWT(AdminBDD._id, "Administrador")
+    const token = generarJWT(AdminBDD._id, "administrador")
 
-    const nuevoToken = {
-        AdminBDD,
+    const {_id} = AdminBDD
+    
+    res.status(200).json({
         token,
+        _id,
         rol:'administrador'
-    }
-    res.status(200).json(nuevoToken)
+    })
 }
 
 const RecuperarContraseña = async (req, res) => {
@@ -108,7 +109,7 @@ const ActualizarContrasenia = async(req, res)=>{
     res.status(200).json({msg:"Contraseña actualizada"})
 }
 
-const Perfil = async (req, res) =>{
+const Perfil = (req, res) =>{
     delete req.AdminBDD.token
     delete req.AdminBDD.confirmEmail
     delete req.AdminBDD.createdAt
