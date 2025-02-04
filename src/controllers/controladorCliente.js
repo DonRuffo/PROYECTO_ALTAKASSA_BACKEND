@@ -77,7 +77,7 @@ const ActualizarContraseniaCliente = async(req, res)=>{
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const ClienteBDD = await ModeloCliente.findOne({email})
     if (!ClienteBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
-    const Verificacion = await ClienteBDD.CompararContra(contrasenia)
+    const Verificacion = await ClienteBDD.CompararPasswordCliente(contrasenia)
     if(!Verificacion) return res.status(404).json({msg:"La contraseña actual no es correcta"})
     const EncriptarContra = await ClienteBDD.EncriptarContrasenia(nuevaContrasenia)
     ClienteBDD.contrasenia = EncriptarContra
