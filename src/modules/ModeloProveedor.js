@@ -35,6 +35,10 @@ const Proveedor = new Schema({
         require: true,
         default: null
     },
+    rol:{
+        type:String,
+        default:'proveedor'
+    },
     contrasenia:{
         type:String,
         require:true

@@ -30,6 +30,10 @@ const ClienteSchema = new Schema({
         unique:true,
         default:null
     },
+    rol:{
+        type:String,
+        default:'cliente'
+    },
     fechaNacimiento:{
         type:Date,
         require:true

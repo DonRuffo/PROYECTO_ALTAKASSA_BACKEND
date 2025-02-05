@@ -30,6 +30,10 @@ const AdministradorSchema = new Schema({
         unique:true,
         trim:true
     },
+    rol:{
+        type:String,
+        default:'administrador'
+    },
     contrasenia:{
         type:String,
         require:true
