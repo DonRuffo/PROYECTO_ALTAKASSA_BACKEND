@@ -60,7 +60,7 @@ const loginProve = async (req, res) => {
 }
 
 const ActualizarPerfilProveedor = async (req, res) => {
-    const { email } = req.body
+    const { email } = req.proveedorBDD
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const proveedorBDD = await Proveedor.findOne({ email })
     if (!proveedorBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
