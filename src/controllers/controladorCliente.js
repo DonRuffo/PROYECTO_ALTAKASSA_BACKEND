@@ -59,7 +59,7 @@ const loginCliente = async (req, res) => {
 }
 
 const ActualizarPerfilCliente = async (req, res) => {
-    const { email } = req.body
+    const { email } = req.clienteBDD
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const ClienteBDD = await ModeloCliente.findOne({ email })
     if (!ClienteBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
@@ -73,7 +73,8 @@ const ActualizarPerfilCliente = async (req, res) => {
 }
 
 const ActualizarContraseniaCliente = async(req, res)=>{
-    const {email, contrasenia, nuevaContrasenia} = req.body
+    const {email} = req.clienteBDD
+    const {contrasenia, nuevaContrasenia} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const ClienteBDD = await ModeloCliente.findOne({email})
     if (!ClienteBDD) return res.status(404).json({ msg: "No existe esta cuenta" })

@@ -83,7 +83,7 @@ const ComprobarParaRestablecer = async (req, res) => {
 }
 
 const ActualizarPerfilAdministrador = async (req, res) => {
-    const { email } = req.body
+    const { email } = req.AdminBDD
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const AdminBDD = await ModeloAdmin.findOne({ email })
     if (!AdminBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
@@ -97,7 +97,8 @@ const ActualizarPerfilAdministrador = async (req, res) => {
 }
 
 const ActualizarContrasenia = async(req, res)=>{
-    const {email, contrasenia, nuevaContrasenia} = req.body
+    const {email} = req.AdminBDD
+    const {contrasenia, nuevaContrasenia} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const AdminBDD = await ModeloAdmin.findOne({email})
     if (!AdminBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
