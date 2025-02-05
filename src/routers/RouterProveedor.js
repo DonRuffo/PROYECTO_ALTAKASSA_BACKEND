@@ -20,8 +20,8 @@ routeProveedor.post('/restablecer-contrasenia-prov/:token', ConfirmarRecuperarCo
 
 //privadas
 routeProveedor.get('/perfil-proveedor', verificarAutenticacion, Perfil)
-routeProveedor.post('/actualizar-perfilProveedor', verificarAutenticacion, ActualizarPerfilProveedor)
-routeProveedor.post('/actualizar-contraseniaProveedor', verificarAutenticacion, ActualizarContraseniaProve)
+routeProveedor.put('/actualizar-perfilProveedor', verificarAutenticacion, ActualizarPerfilProveedor)
+routeProveedor.put('/actualizar-contraseniaProveedor', verificarAutenticacion, ActualizarContraseniaProve)
 routeProveedor.get('/detalleProveedor/:id', verificarAutenticacion, detalleProveedor)
 
 

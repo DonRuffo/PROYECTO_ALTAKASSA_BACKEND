@@ -12,7 +12,7 @@ const app = express()
 const corsOptions = {
     origin: 'http://localhost:5173', // Reemplaza con el origen de tu aplicación frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+    allowedHeaders: ['Content-Type', 'Authorization', 'method'], // Encabezados permitidos
 };
 app.use(cors(corsOptions));
 

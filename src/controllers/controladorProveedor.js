@@ -74,7 +74,8 @@ const ActualizarPerfilProveedor = async (req, res) => {
 }
 
 const ActualizarContraseniaProve = async(req, res)=>{
-    const {email, contrasenia, nuevaContrasenia} = req.body
+    const {email} = req.proveedorBDD
+    const {contrasenia, nuevaContrasenia} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const proveedorBDD = await Proveedor.findOne({email})
     if (!proveedorBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
