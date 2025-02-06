@@ -19,7 +19,7 @@ const register = async (req, res) => {
 
     await nuevoAdmin.save()
 
-    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta" })
+    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol:nuevoAdmin.rol })
 }
 const confirmarEmail = async (req, res) => {
     const { token } = req.params
