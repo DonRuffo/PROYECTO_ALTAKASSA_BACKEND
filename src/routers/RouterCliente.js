@@ -15,8 +15,8 @@ routeCliente.post('/restablecerPasswordCliente/:token', ConfirmarRecuperarContra
 
 //privadas
 routeCliente.get('/perfilCliente', verificarAutenticacion, Perfil)
-routeCliente.post('/actualizarPerfilCliente', verificarAutenticacion, ActualizarPerfilCliente)
-routeCliente.post('/actualizarPasswordCliente', verificarAutenticacion, ActualizarContraseniaCliente)
+routeCliente.put('/actualizarPerfilCliente', verificarAutenticacion, ActualizarPerfilCliente)
+routeCliente.put('/actualizarPasswordCliente', verificarAutenticacion, ActualizarContraseniaCliente)
 routeCliente.get('/detalleCliente/:id', verificarAutenticacion, detalleCliente)
 
 

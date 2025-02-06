@@ -19,7 +19,7 @@ router.post('/recuperar-contrasenia', RecuperarContraseña)
 router.get('/restablecer-contrasenia/:token', ComprobarParaRestablecer)
 
 //privadas
-router.post('/actualizar-perfil', verificarAutenticacion, ActualizarPerfilAdministrador)
-router.post('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrasenia)
+router.put('/actualizar-perfil', verificarAutenticacion, ActualizarPerfilAdministrador)
+router.put('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrasenia)
 
 export default router
