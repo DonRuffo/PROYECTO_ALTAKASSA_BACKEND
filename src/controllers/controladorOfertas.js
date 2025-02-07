@@ -90,8 +90,8 @@ const eliminarOferta = async (req,res) =>{
 
 const listarOfertas = async (req,res) => {
     try{
-        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre email')
-
+        const id = req.proveedorBDD._id
+        const ofertas = await ModeloOfertas.find({proveedor:id}).populate('proveedor', 'nombre email')
         res.status(200).json(ofertas)
     } catch(error){
         console.log(error)
