@@ -1,12 +1,12 @@
 import { check, validationResult } from "express-validator";
 
-const validacionRegistroCliente = () => {
-    return [
+const validacionRegistroProveedor = () => {
+    return[
         check('nombre')
         .trim()
-        .notEmpty().withMessage('El nombre es obligatorio')
-        .isLength({ min: 2, max: 50 }).withMessage('El nombre debe tener entre 2 y 50 caracteres')
-        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage('El nombre solo puede contener letras y espacios'),
+        .notEmpty().withMessage("El campo nombre es obligatorio")
+        .isLength({min:2, max: 50 }).withMessage("El nombre debe tener entre 2 y 50 caracteres")
+        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage("El nombre solo puede contener letras y espacios"),
 
         check('apellido')
         .trim()
@@ -29,10 +29,36 @@ const validacionRegistroCliente = () => {
         .notEmpty().withMessage('El teléfono es obligatorio')
         .isMobilePhone().withMessage('Debe ser un número de teléfono válido'),
 
-        check('fechaNacimiento')
+        check('profesiones')
         .trim()
-        .notEmpty().withMessage('La fecha de nacimiento es obligatoria')
-        .isDate().withMessage('Debe ser una fecha válida'),
+        .notEmpty().withMessage('La profesión es obligatorio')
+        .isLength({ min: 2, max: 50 }).withMessage('La profesión debe tener entre 2 y 50 caracteres')
+        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage('La profesión solo puede contener letras y espacios'),
+
+        check('contrasenia')
+        .trim()
+        .notEmpty().withMessage('La contraseña es obligatoria')
+        .isLength({ min: 10 }).withMessage('La contraseña debe tener al menos 10 caracteres')
+        .matches(/[A-Z]/).withMessage('La contraseña debe contener al menos una letra mayúscula')
+        .matches(/[a-z]/).withMessage('La contraseña debe contener al menos una letra minúscula')
+        .matches(/[0-9]/).withMessage('La contraseña debe contener al menos un número'),
+
+        (req,res,next) => {
+            const errores = validationResult(req)
+
+            if(!errores.isEmpty()){
+                const checkError = errores.array().map(error=>error.msg)
+
+                return res.status(400).json({msg:checkError})
+            }
+            next()
+        }
+
+    ]
+}
+
+const validacionRecuperarPassProveedor = () => {
+    return [
 
         check('contrasenia')
         .trim()
@@ -56,38 +82,13 @@ const validacionRegistroCliente = () => {
     ]
 }
 
-const validacionRecuperarPassCliente = () => {
-    return [
-
-        check('contrasenia')
-        .trim()
-        .notEmpty().withMessage('La contraseña es obligatoria')
-        .isLength({ min: 10 }).withMessage('La contraseña debe tener al menos 10 caracteres')
-        .matches(/[A-Z]/).withMessage('La contraseña debe contener al menos una letra mayúscula')
-        .matches(/[a-z]/).withMessage('La contraseña debe contener al menos una letra minúscula')
-        .matches(/[0-9]/).withMessage('La contraseña debe contener al menos un número'),
-
-        (req,res,next) => {
-            const errores = validationResult(req)
-            
-            if(!errores.isEmpty()) {
-                const checkError = errores.array().map(error => error.msg)
-
-                return res.status(400).json({msg:checkError})
-
-            }
-            next();
-        }   
-    ]
-}
-
-const validacionActualizarCliente = () => {
-    return [
+const validacionActualizarProveedor = () => {
+    return[
         check('nombre')
         .optional().trim()
-        .notEmpty().withMessage('El nombre es obligatorio')
-        .isLength({ min: 2, max: 50 }).withMessage('El nombre debe tener entre 2 y 50 caracteres')
-        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage('El nombre solo puede contener letras y espacios'),
+        .notEmpty().withMessage("El campo nombre es obligatorio")
+        .isLength({min:2, max: 50 }).withMessage("El nombre debe tener entre 2 y 50 caracteres")
+        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage("El nombre solo puede contener letras y espacios"),
 
         check('apellido')
         .optional().trim()
@@ -110,26 +111,27 @@ const validacionActualizarCliente = () => {
         .notEmpty().withMessage('El teléfono es obligatorio')
         .isMobilePhone().withMessage('Debe ser un número de teléfono válido'),
 
-        check('fechaNacimiento')
+        check('profesiones')
         .optional().trim()
-        .notEmpty().withMessage('La fecha de nacimiento es obligatoria')
-        .isDate().withMessage('Debe ser una fecha válida'),
+        .notEmpty().withMessage('La profesión es obligatorio')
+        .isLength({ min: 2, max: 50 }).withMessage('La profesión debe tener entre 2 y 50 caracteres')
+        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage('La profesión solo puede contener letras y espacios'),
 
         (req,res,next) => {
             const errores = validationResult(req)
-            
-            if(!errores.isEmpty()) {
-                const checkError = errores.array().map(error => error.msg)
+
+            if(!errores.isEmpty()){
+                const checkError = errores.array().map(error=>error.msg)
 
                 return res.status(400).json({msg:checkError})
-
             }
-            next();
-        }   
+            next()
+        }
+
     ]
 }
 
-const validacionActualizarPassCliente = () => {
+const validacionActualizarPassProveedor = () => {
     return [
 
         check('nuevaContrasenia')
@@ -155,8 +157,8 @@ const validacionActualizarPassCliente = () => {
 }
 
 export {
-    validacionRegistroCliente,
-    validacionRecuperarPassCliente,
-    validacionActualizarCliente,
-    validacionActualizarPassCliente
+    validacionRegistroProveedor,
+    validacionRecuperarPassProveedor,
+    validacionActualizarProveedor,
+    validacionActualizarPassProveedor
 }
