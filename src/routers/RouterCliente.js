@@ -4,6 +4,7 @@ ConfirmarRecuperarContrasenia, Perfil, ActualizarPerfilCliente, ActualizarContra
 detalleCliente} from "../controllers/controladorCliente.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import {validacionRegistroCliente, validacionRecuperarPassCliente, validacionActualizarCliente, validacionActualizarPassCliente } from "../validation/validationCliente.js";
+import { listarOfertas } from "../controllers/controladorOfertas.js";
 
 
 const routeCliente = Router()
@@ -19,6 +20,7 @@ routeCliente.get('/perfilCliente', verificarAutenticacion, Perfil)
 routeCliente.put('/actualizarPerfilCliente', verificarAutenticacion, validacionActualizarCliente(), ActualizarPerfilCliente)
 routeCliente.put('/actualizarPasswordCliente', verificarAutenticacion, validacionActualizarPassCliente(), ActualizarContraseniaCliente)
 routeCliente.get('/detalleCliente/:id', verificarAutenticacion, detalleCliente)
+routeCliente.get('/listarOfertas', verificarAutenticacion, listarOfertas)
 
 
 
