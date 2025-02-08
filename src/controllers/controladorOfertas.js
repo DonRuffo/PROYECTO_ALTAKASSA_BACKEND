@@ -88,17 +88,6 @@ const eliminarOferta = async (req,res) =>{
     }
 }
 
-const listarOfertas = async (req,res) => {
-    try{
-        const id = req.proveedorBDD._id
-        const ofertas = await ModeloOfertas.find({proveedor:id}).populate('proveedor', 'nombre email')
-        res.status(200).json(ofertas)
-    } catch(error){
-        console.log(error)
-        res.status(500).json({msg: "Error al obtener las ofertas"})
-    }
-}
-
 const misOfertas = async (req,res) => {
     try {
         const ofertas = await ModeloOfertas.find({ proveedor: req.proveedorBDD._id })
@@ -116,6 +105,5 @@ export {
     verOferta,
     actualizarOferta,
     eliminarOferta,
-    listarOfertas,
     misOfertas
 }
