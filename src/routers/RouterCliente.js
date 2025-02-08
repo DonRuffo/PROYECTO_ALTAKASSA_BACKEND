@@ -3,7 +3,7 @@ import { confirmarEmail, loginCliente, RecuperarContrasenia, registroCliente,
 ConfirmarRecuperarContrasenia, Perfil, ActualizarPerfilCliente, ActualizarContraseniaCliente, 
 detalleCliente} from "../controllers/controladorCliente.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
-import {validacionRegistroCliente, validacionRecuperarPassCliente, validacionActualizarCliente, validacionActualizarPassCliente } from "../../validation/validationCliente.js";
+import {validacionRegistroCliente, validacionRecuperarPassCliente, validacionActualizarCliente, validacionActualizarPassCliente } from "../validation/validationCliente.js";
 
 
 const routeCliente = Router()
