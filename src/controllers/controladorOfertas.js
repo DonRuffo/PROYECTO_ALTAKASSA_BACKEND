@@ -102,7 +102,7 @@ const misOfertas = async (req,res) => {
 
 const listarOfertas = async (req,res) => {
     try {
-        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre email');
+        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email');
         res.status(200).json(ofertas);
     } catch (error) {
         console.log(error);
