@@ -26,6 +26,11 @@ const TrabajosSchema = new Schema({
         trim:true,
         default:"En espera"
     },
+    servicio:{
+        type:String,
+        trim:true,
+        require:true
+    },
     tipo:{
         type:String,
         require:true
