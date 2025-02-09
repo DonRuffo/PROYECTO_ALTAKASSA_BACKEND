@@ -43,6 +43,10 @@ const TrabajosSchema = new Schema({
         type: String,
         default: '17:00'
     },
+    precioTotal : {
+        type:Number,
+        require:true
+    },
     calificacionCliente:{
         type:Number,
         require:true,
