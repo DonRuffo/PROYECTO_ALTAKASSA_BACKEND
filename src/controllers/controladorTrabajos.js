@@ -6,8 +6,8 @@ import Trabajos from '../modules/ModeloTrabajos.js'
 const crearTrabajo = async (req, res) => {
     try {
         const oferta = await Ofertas.findById(req.body.oferta)
+        if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Debe seleccionar todos los campos"})
         if (!oferta) return res.status(404).json({msg: "Oferta no encontrada"})
-        
         const trabajo = new Trabajos(req.body)
         trabajo.cliente = req.clienteBDD._id
         trabajo.proveedor = oferta.proveedor
