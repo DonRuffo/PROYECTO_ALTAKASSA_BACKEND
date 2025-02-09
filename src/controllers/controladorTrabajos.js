@@ -11,8 +11,7 @@ const crearTrabajo = async (req, res) => {
         const trabajo = new Trabajos(req.body)
         trabajo.cliente = req.clienteBDD._id
         trabajo.proveedor = oferta.proveedor
-        trabajo.tipo = oferta.servicio
-
+        trabajo.oferta = oferta._id
         await trabajo.save()
 
         res.status(200).json({msg: "Trabajo creado con exito"})
