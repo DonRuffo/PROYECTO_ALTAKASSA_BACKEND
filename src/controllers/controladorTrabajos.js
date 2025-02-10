@@ -53,6 +53,21 @@ const obtenerTrabajosPorProveedor = async (req, res) =>{
     }
 }
 
+const obtenerTrabajosPorCliente = async (req, res) =>{
+    try {
+        const trabajos = await ModeloTrabajos.find({cliente:req.clienteBDD._id})
+            .populate('cliente', 'nombre apellido email')
+            .populate('proveedor', 'nombre apellido email')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
+        if (!trabajos) return res.status(404).json({ msg: "No tienes solicitudes de trabajo" })
+        res.status(200).json(trabajos)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Error al obtener los trabajos" })
+    }
+}
+
 const actualizarTrabajo = async (req, res) => {
     const { id } = req.params
     try {
@@ -140,6 +155,7 @@ export {
     actualizarTrabajo,
     eliminarTrabajo,
     obtenerTrabajosPorProveedor,
+    obtenerTrabajosPorCliente,
     agendarTrabajo,
     rechazarTrabajo
 }
