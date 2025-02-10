@@ -59,10 +59,13 @@ const actualizarTrabajo = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" })
         const trabajo = await ModeloTrabajos.findById(id)
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
-        trabajo.status = req.body.status || trabajo.status
+        trabajo.oferta = req.body.oferta || trabajo.oferta
+        trabajo.fecha = req.body.fecha || trabajo.fecha
+        trabajo.servicio = req.body.servicio || trabajo.servicio
         trabajo.tipo = req.body.tipo || trabajo.tipo
         trabajo.desde = req.body.desde || trabajo.desde
         trabajo.hasta = req.body.hasta || trabajo.hasta
+        trabajo.precioTotal = req.body.precioTotal || trabajo.precioTotal
         trabajo.calificacionCliente = req.body.calificacionCliente || trabajo.calificacionCliente
         trabajo.calificacionProveedor = req.body.calificacionProveedor || trabajo.calificacionProveedor
         const trabajoActualizado = await trabajo.save()
@@ -90,10 +93,53 @@ const eliminarTrabajo = async (req, res) => {
     }
 }
 
+const agendarTrabajo = async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        const trabajo = await ModeloTrabajos.findById(id);
+        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        if (trabajo.status !== "En espera") return res.status(400).json({ msg: "El trabajo ya no puede ser agendar o ya fue agendado" });
+
+        trabajo.status = "Agendado";
+        const trabajoActualizado = await trabajo.save();
+        res.status(200).json({
+            msg: "Estado del trabajo actualizado a 'Agendado' correctamente",
+            trabajoActualizado
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Error al actualizar el estado del trabajo" });
+    }
+}
+
+const rechazarTrabajo = async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        const trabajo = await ModeloTrabajos.findById(id);
+        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        if (trabajo.status === "Completado" || trabajo.status === "Rechazado") return res.status(400).json({ msg: "El trabajo ya no puede ser rechazado" });
+
+        trabajo.status = "Rechazado";
+        const trabajoActualizado = await trabajo.save();
+        res.status(200).json({
+            msg: "Estado del trabajo actualizado a 'Rechazado' correctamente",
+            trabajoActualizado
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Error al actualizar el estado del trabajo" });
+    }
+}
+
+
 export {
     crearTrabajo,
     obtenerTrabajo,
     actualizarTrabajo,
     eliminarTrabajo,
-    obtenerTrabajosPorProveedor
+    obtenerTrabajosPorProveedor,
+    agendarTrabajo,
+    rechazarTrabajo
 }
