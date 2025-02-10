@@ -119,7 +119,7 @@ const agendarTrabajo = async (req, res) => {
         trabajo.status = "Agendado";
         const trabajoActualizado = await trabajo.save();
         res.status(200).json({
-            msg: "Estado del trabajo actualizado a 'Agendado' correctamente",
+            msg: "Has aceptado la solicitud",
             trabajoActualizado
         });
     } catch (error) {
@@ -139,7 +139,7 @@ const rechazarTrabajo = async (req, res) => {
         trabajo.status = "Rechazado";
         const trabajoActualizado = await trabajo.save();
         res.status(200).json({
-            msg: "Estado del trabajo actualizado a 'Rechazado' correctamente",
+            msg: "Has rechazado la solicitud",
             trabajoActualizado
         });
     } catch (error) {
