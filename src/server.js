@@ -10,10 +10,12 @@ import routerTrabajos from './routers/RouterTrabajos.js';
 
 const app = express()
 const corsOptions = {
-    origin: 'http://localhost:5173', // Reemplaza con el origen de tu aplicación frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-    allowedHeaders: ['Content-Type', 'Authorization', 'method'], // Encabezados permitidos
+    origin: ['http://localhost:5173', 'http://localhost:4000'], // Permitir ambos puertos
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'method'],
 };
+app.use(cors(corsOptions));
+
 app.use(cors(corsOptions));
 
 dotenv.config()
