@@ -10,7 +10,7 @@ import routerTrabajos from './routers/RouterTrabajos.js';
 
 const app = express()
 const corsOptions = {
-    origin: ['http://localhost:5173', 'http://localhost:4000'], // Permitir ambos puertos
+    origin: ['http://localhost:5173', 'https://altakassa.vercel.app/'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'method'],
 };
