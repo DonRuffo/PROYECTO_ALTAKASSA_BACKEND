@@ -29,12 +29,6 @@ const validacionRegistroProveedor = () => {
         .notEmpty().withMessage('El teléfono es obligatorio')
         .isMobilePhone().withMessage('Debe ser un número de teléfono válido'),
 
-        check('profesiones')
-        .trim()
-        .notEmpty().withMessage('La profesión es obligatorio')
-        .isLength({ min: 2, max: 50 }).withMessage('La profesión debe tener entre 2 y 50 caracteres')
-        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/).withMessage('La profesión solo puede contener letras y espacios'),
-
         check('contrasenia')
         .trim()
         .notEmpty().withMessage('La contraseña es obligatoria')
