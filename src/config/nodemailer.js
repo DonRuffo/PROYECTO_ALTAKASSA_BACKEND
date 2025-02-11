@@ -42,6 +42,7 @@ const sendMailToAdminRestore = (userMail, token) => {
       html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}restablecer/${encodeURIComponent(token)}">aquí</a> para restablecer tu contraseña.</p>`
   };
   
+  //estecamponovale
 
   transporter.sendMail(mailOptions, function(error, info){
       if (error) {
