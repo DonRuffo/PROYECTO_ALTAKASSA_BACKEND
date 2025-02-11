@@ -51,11 +51,6 @@ const validacionCrearTrabajo = () => {
 
 const validacionActualizarTrabajo = () => {
     return [
-        check('oferta')
-        .optional()
-        .trim()
-        .isMongoId().withMessage('La oferta debe ser un ID válido'),
-
         check('fecha')
         .optional()
         .isDate().withMessage('La fecha debe ser una fecha válida'),
