@@ -16,6 +16,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+//pq novale :(
 app.use(cors(corsOptions));
 
 dotenv.config()
