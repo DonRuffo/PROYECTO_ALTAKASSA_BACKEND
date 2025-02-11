@@ -29,11 +29,6 @@ const validacionRegistroCliente = () => {
         .notEmpty().withMessage('El teléfono es obligatorio')
         .isMobilePhone().withMessage('Debe ser un número de teléfono válido'),
 
-        check('fechaNacimiento')
-        .trim()
-        .notEmpty().withMessage('La fecha de nacimiento es obligatoria')
-        .isDate().withMessage('Debe ser una fecha válida'),
-
         check('contrasenia')
         .trim()
         .notEmpty().withMessage('La contraseña es obligatoria')

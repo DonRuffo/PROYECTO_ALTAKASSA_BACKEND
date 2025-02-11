@@ -77,12 +77,6 @@ const validacionActualizarTrabajo = () => {
         .optional()
         .isString().withMessage('Hasta debe ser una cadena de texto'),
 
-        check('precioTotal')
-        .optional()
-        .trim()
-        .isNumeric().withMessage('El precio total debe ser un número')
-        .isFloat({ min: 0 }).withMessage('El precio total debe ser mayor a 0'),
-
         (req, res, next) => {
             const errores = validationResult(req);
             if (!errores.isEmpty()) {
