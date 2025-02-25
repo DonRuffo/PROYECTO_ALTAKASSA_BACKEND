@@ -38,6 +38,23 @@ const obtenerTrabajo = async (req, res) => {
     }
 }
 
+const obtenerTrabajosDeUnProveedor =async (req, res)=>{
+    const { id } = req.params
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" })
+        const trabajo = await ModeloTrabajos.find({proveedor:id})
+            .populate('cliente', 'nombre apellido email')
+            .populate('proveedor', 'nombre apellido email')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
+        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
+        res.status(200).json(trabajo)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Error al obtener el trabajo" })
+    }
+}
+
 const obtenerTrabajosPorProveedor = async (req, res) =>{
     try {
         const trabajos = await ModeloTrabajos.find({proveedor:req.proveedorBDD._id})
@@ -157,5 +174,6 @@ export {
     obtenerTrabajosPorProveedor,
     obtenerTrabajosPorCliente,
     agendarTrabajo,
-    rechazarTrabajo
+    rechazarTrabajo,
+    obtenerTrabajosDeUnProveedor
 }
