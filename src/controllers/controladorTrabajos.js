@@ -46,7 +46,7 @@ const obtenerTrabajosDeUnProveedor =async (req, res)=>{
             .populate('cliente', 'nombre apellido email')
             .populate('proveedor', 'nombre apellido email')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
-        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
+        if (!trabajo) return res.status(404).json({ msg: "Trabajos no encontrado" })
         res.status(200).json(trabajo)
 
     } catch (error) {

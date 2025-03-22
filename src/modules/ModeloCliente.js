@@ -57,6 +57,16 @@ const ClienteSchema = new Schema({
     calificacion:{
         type:Number,
         default:null
+    },
+    ubicacion:{
+        longitud:{
+            type:Number,
+            default:null
+        },
+        latitud:{
+            type:Number,
+            default:null
+        }
     }
 },{
     timestamps:true

@@ -64,7 +64,17 @@ const Proveedor = new Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:'Ofertas'
         }
-    ]
+    ],
+    ubicacion:{
+        longitud:{
+            type:Number,
+            default:null
+        },
+        latitud:{
+            type:Number,
+            default:null
+        }
+    }
 },
 {
     timestamps:true

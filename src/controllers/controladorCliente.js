@@ -122,6 +122,20 @@ const detalleCliente = async(req,res)=>{
     res.status(200).json({msg:ClienteBDD})
 }
 
+const AgregarUbicacion = async (req, res) => {
+    try {
+        const { email } = req.clienteBDD
+        const { longitude, latitude } = req.body
+        const usuario = await ModeloCliente.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el proveedor" })
+        usuario.ubicacion.latitud = latitude
+        usuario.ubicacion.longitud = longitude
+        await usuario.save()
+        res.status(200).json({ msg: "Ubicación guardada con éxito" })
+    } catch (error) {
+        res.status(404).json({ msg: "Error al actualizar la ubicación", error:error.message })
+    }
+}
 
 const Perfil = async (req, res) =>{
     delete req.clienteBDD.token
@@ -141,5 +155,6 @@ export {
     ActualizarContraseniaCliente,
     RecuperarContrasenia,
     ConfirmarRecuperarContrasenia,
-    detalleCliente
+    detalleCliente,
+    AgregarUbicacion
 }
