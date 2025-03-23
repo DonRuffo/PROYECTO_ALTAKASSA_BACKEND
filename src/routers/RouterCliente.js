@@ -2,7 +2,8 @@ import { Router } from "express";
 import { confirmarEmail, loginCliente, RecuperarContrasenia, registroCliente, 
 ConfirmarRecuperarContrasenia, Perfil, ActualizarPerfilCliente, ActualizarContraseniaCliente, 
 detalleCliente,
-AgregarUbicacion} from "../controllers/controladorCliente.js";
+AgregarUbicacion,
+VerificarUbicacion} from "../controllers/controladorCliente.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import {validacionRegistroCliente, validacionRecuperarPassCliente, validacionActualizarCliente, validacionActualizarPassCliente } from "../validation/validationCliente.js";
 import { listarOfertas } from "../controllers/controladorOfertas.js";
@@ -23,5 +24,6 @@ routeCliente.put('/actualizarPasswordCliente', verificarAutenticacion, validacio
 routeCliente.get('/detalleCliente/:id', verificarAutenticacion, detalleCliente)
 routeCliente.get('/listarOfertas', verificarAutenticacion, listarOfertas)
 routeCliente.get('/guardar-ubicacion-cli', verificarAutenticacion, AgregarUbicacion)
+routeCliente.get('/ubicacion-cli', verificarAutenticacion, VerificarUbicacion)
 
 export default routeCliente

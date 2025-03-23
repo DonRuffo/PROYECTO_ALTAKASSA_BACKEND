@@ -127,13 +127,28 @@ const AgregarUbicacion = async (req, res) => {
         const { email } = req.clienteBDD
         const { longitude, latitude } = req.body
         const usuario = await ModeloCliente.findOne({ email })
-        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el proveedor" })
+        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el cliente" })
         usuario.ubicacion.latitud = latitude
         usuario.ubicacion.longitud = longitude
         await usuario.save()
         res.status(200).json({ msg: "Ubicación guardada con éxito" })
     } catch (error) {
         res.status(404).json({ msg: "Error al actualizar la ubicación", error:error.message })
+    }
+}
+
+const VerificarUbicacion = async (req, res) => {
+    try {
+        const { email } = req.clienteBDDBDD
+        const usuario = await ModeloCliente.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el cliente" })
+        const latitud = usuario.ubicacion.latitud
+        const longitud = usuario.ubicacion.longitud
+
+        if (latitud === null || longitud === null) return res.status(200).json({ msg: "No" })
+        if (latitud !== null && longitud !== null) return res.status(200).json({ msg: "Si" })
+    } catch (error) {
+        res.status(404).json({ msg: "Error al verificar la ubicación", error: error.message })
     }
 }
 
@@ -156,5 +171,6 @@ export {
     RecuperarContrasenia,
     ConfirmarRecuperarContrasenia,
     detalleCliente,
-    AgregarUbicacion
+    AgregarUbicacion,
+    VerificarUbicacion
 }

@@ -8,7 +8,8 @@ import { RecuperarContrasenia,
         ActualizarContraseniaProve,
         Perfil,
         detalleProveedor,
-        AgregarUbicacion} from "../controllers/controladorProveedor.js";
+        AgregarUbicacion,
+        VerificarUbicacion} from "../controllers/controladorProveedor.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import { validacionActualizarPassProveedor, validacionActualizarProveedor, validacionRecuperarPassProveedor, validacionRegistroProveedor } from "../validation/validationProveedores.js";
 
@@ -26,6 +27,7 @@ routeProveedor.put('/actualizar-perfilProveedor', verificarAutenticacion, valida
 routeProveedor.put('/actualizar-contraseniaProveedor', verificarAutenticacion, validacionActualizarPassProveedor(), ActualizarContraseniaProve)
 routeProveedor.get('/detalleProveedor/:id', verificarAutenticacion, detalleProveedor)
 routeProveedor.post('/guardar-ubicacion-prov', verificarAutenticacion, AgregarUbicacion)
+routeProveedor.get('/ubicacion-prov', verificarAutenticacion, VerificarUbicacion)
 
 
 
