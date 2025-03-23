@@ -22,6 +22,6 @@ routeCliente.put('/actualizarPerfilCliente', verificarAutenticacion, validacionA
 routeCliente.put('/actualizarPasswordCliente', verificarAutenticacion, validacionActualizarPassCliente(), ActualizarContraseniaCliente)
 routeCliente.get('/detalleCliente/:id', verificarAutenticacion, detalleCliente)
 routeCliente.get('/listarOfertas', verificarAutenticacion, listarOfertas)
-routeCliente.get('/guardar-ubicacion', verificarAutenticacion, AgregarUbicacion)
+routeCliente.get('/guardar-ubicacion-cli', verificarAutenticacion, AgregarUbicacion)
 
 export default routeCliente

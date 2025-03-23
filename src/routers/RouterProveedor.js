@@ -25,7 +25,7 @@ routeProveedor.get('/perfil-proveedor', verificarAutenticacion, Perfil)
 routeProveedor.put('/actualizar-perfilProveedor', verificarAutenticacion, validacionActualizarProveedor(), ActualizarPerfilProveedor)
 routeProveedor.put('/actualizar-contraseniaProveedor', verificarAutenticacion, validacionActualizarPassProveedor(), ActualizarContraseniaProve)
 routeProveedor.get('/detalleProveedor/:id', verificarAutenticacion, detalleProveedor)
-routeProveedor.post('/guardar-ubicacion', verificarAutenticacion, AgregarUbicacion)
+routeProveedor.post('/guardar-ubicacion-prov', verificarAutenticacion, AgregarUbicacion)
 
 
 
