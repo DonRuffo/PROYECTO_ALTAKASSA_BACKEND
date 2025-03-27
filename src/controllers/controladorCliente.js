@@ -139,7 +139,7 @@ const AgregarUbicacion = async (req, res) => {
 
 const VerificarUbicacion = async (req, res) => {
     try {
-        const { email } = req.clienteBDDBDD
+        const { email } = req.clienteBDD
         const usuario = await ModeloCliente.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el cliente" })
         const latitud = usuario.ubicacion.latitud
