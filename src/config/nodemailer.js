@@ -13,7 +13,7 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-const sendMailToAdmin = (userMail, token) => {
+const sendMailToAdmin = async (userMail, token) => {
 
   let mailOptions = {
       from: process.env.USER_MAILTRAP,
@@ -22,8 +22,6 @@ const sendMailToAdmin = (userMail, token) => {
       html: `<p>Hola , haz clic <a href="${process.env.URL_FRONTEND}confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
   };
   
-//http://localhost:4000/
-//${process.env.URL_BACKEND}
   transporter.sendMail(mailOptions, function(error, info){
       if (error) {
           console.log(error);
@@ -33,7 +31,7 @@ const sendMailToAdmin = (userMail, token) => {
   });
 };
 
-const sendMailToAdminRestore = (userMail, token) => {
+const sendMailToAdminRestore = async (userMail, token) => {
 
   let mailOptions = {
       from: process.env.USER_MAILTRAP,
@@ -41,9 +39,6 @@ const sendMailToAdminRestore = (userMail, token) => {
       subject: "Recupera tu cuenta",
       html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}restablecer/${encodeURIComponent(token)}">aquí</a> para restablecer tu contraseña.</p>`
   };
-  
-  //estecamponovale
-  //probando
 
   transporter.sendMail(mailOptions, function(error, info){
       if (error) {

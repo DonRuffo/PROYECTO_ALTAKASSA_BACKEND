@@ -17,9 +17,9 @@ const registroProve = async (req, res) => {
     nuevoProve.contrasenia = await nuevoProve.EncriptarContrasenia(contrasenia)
 
     const token = nuevoProve.GenerarToken()
-    sendMailToAdmin(email, token)
-
     await nuevoProve.save()
+    
+    await sendMailToAdmin(email, token)
 
     res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol: nuevoProve.rol })
 }
