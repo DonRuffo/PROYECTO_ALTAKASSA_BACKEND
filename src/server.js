@@ -15,8 +15,8 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'method'],
 };
-app.use(cors(corsOptions));
-
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 
 dotenv.config()
 app.use(express.json())
