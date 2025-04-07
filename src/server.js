@@ -8,7 +8,7 @@ import routeCliente from './routers/RouterCliente.js';
 import routerOfertas from './routers/RouterOfertas.js';
 import routerTrabajos from './routers/RouterTrabajos.js';
 import routerPagos from './routers/RouterPagos.js';
-
+dotenv.config()
 const app = express()
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://altakassa.vercel.app');
@@ -22,14 +22,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const corsOptions = {
-    origin: ['http://localhost:5173', 'https://altakassa.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'method'],
-};
-app.use(cors(corsOptions))
-
-dotenv.config()
 app.use(express.json())
 
 app.use(morgan('dev'))
