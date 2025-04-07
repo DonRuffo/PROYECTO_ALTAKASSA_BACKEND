@@ -28,9 +28,6 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization', 'method'],
 };
 app.use(cors(corsOptions))
-app.options('*', (req, res) => {
-    res.sendStatus(200)
-})
 
 dotenv.config()
 app.use(express.json())
