@@ -5,7 +5,8 @@ import { confirmarEmail,
     RecuperarContraseña, 
     ComprobarParaRestablecer, 
     ActualizarPerfilAdministrador,
-    ActualizarContrasenia } from "../controllers/ControladorAdmin.js";
+    ActualizarContrasenia, 
+    Perfil} from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
 
@@ -19,6 +20,7 @@ router.post('/recuperar-contrasenia', RecuperarContraseña)
 router.get('/restablecer-contrasenia/:token', ComprobarParaRestablecer)
 
 //privadas
+router.get('/perfil-admin', verificarAutenticacion , Perfil)
 router.put('/actualizar-perfil', verificarAutenticacion, ActualizarPerfilAdministrador)
 router.put('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrasenia)
 

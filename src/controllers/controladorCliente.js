@@ -152,19 +152,6 @@ const VerificarUbicacion = async (req, res) => {
     }
 }
 
-const ObtenerUbicacion = async (req, res) =>{
-    try {
-        const {email} = req.clienteBDD
-        const usuario = await ModeloCliente.findOne({ email })
-        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el cliente" })
-        const ubicacion = usuario.ubicacion
-        if(ubicacion.latitud === null || ubicacion.longitud === null) return res.status(404).json({msg:"No se ha registrado la ubicación"})
-        res.status(200).json(ubicacion)
-    } catch (error) {
-        res.status(404).json({msg:"Error al obtener la ubicación", error:error.message})
-    }
-}
-
 const Perfil = async (req, res) =>{
     delete req.clienteBDD.token
     delete req.clienteBDD.confirmEmail

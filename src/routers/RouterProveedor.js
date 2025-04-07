@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { RecuperarContrasenia, 
+import {
+        RecuperarContrasenia,
         ConfirmarRecuperarContrasenia,
         registroProve,
         confirmarEmail,
@@ -9,15 +10,15 @@ import { RecuperarContrasenia,
         Perfil,
         detalleProveedor,
         AgregarUbicacion,
-        VerificarUbicacion,
-        ObtenerUbicacion} from "../controllers/controladorProveedor.js";
+        VerificarUbicacion
+} from "../controllers/controladorProveedor.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import { validacionActualizarPassProveedor, validacionActualizarProveedor, validacionRecuperarPassProveedor, validacionRegistroProveedor } from "../validation/validationProveedores.js";
 
 const routeProveedor = Router()
 
 routeProveedor.post('/registroProveedor', validacionRegistroProveedor(), registroProve)
-routeProveedor.get('/confirmarProveedor/:token',confirmarEmail)
+routeProveedor.get('/confirmarProveedor/:token', confirmarEmail)
 routeProveedor.post('/loginProveedor', loginProve)
 routeProveedor.post('/recuperar-contrasenia-prov', RecuperarContrasenia)
 routeProveedor.post('/restablecer-contrasenia-prov/:token', validacionRecuperarPassProveedor(), ConfirmarRecuperarContrasenia)
@@ -29,7 +30,6 @@ routeProveedor.put('/actualizar-contraseniaProveedor', verificarAutenticacion, v
 routeProveedor.get('/detalleProveedor/:id', verificarAutenticacion, detalleProveedor)
 routeProveedor.post('/guardar-ubicacion-prov', verificarAutenticacion, AgregarUbicacion)
 routeProveedor.get('/ubicacion-prov', verificarAutenticacion, VerificarUbicacion)
-routeProveedor.get('/obtenerUbicacion-prov', verificarAutenticacion, ObtenerUbicacion)
 
 
 
