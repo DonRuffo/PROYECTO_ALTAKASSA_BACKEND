@@ -1,4 +1,3 @@
-import { json } from "express";
 import ModeloOfertas from "../modules/ModeloOfertas.js";
 import mongoose from "mongoose";
 
