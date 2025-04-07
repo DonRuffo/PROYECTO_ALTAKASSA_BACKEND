@@ -67,6 +67,10 @@ const ClienteSchema = new Schema({
             type:Number,
             default:null
         }
+    },
+    f_perfil:{
+        type:String,
+        default:null
     }
 },{
     timestamps:true

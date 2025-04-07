@@ -162,6 +162,37 @@ const Perfil = (req, res) => {
     res.status(200).json(req.proveedorBDD)
 }
 
+const SubidaFoto = async(req, res) =>{
+    try {
+        const {email} = req.proveedorBDD
+        const usuario = await Proveedor.findOne({email})
+        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+        const secure_url = req.body
+        if(!secure_url) return res.status(404).json({msg:'No existe una url de Cloud'})
+        usuario.f_perfil=secure_url
+        await usuario.save()
+        res.status(200).json({msg:'Imagen guardada'})
+    } catch (error) {
+        console.log('Hubo un error al subir la imagen', error)
+    }
+}
+
+const VerificacionFoto = async(req,res)=>{
+    try {
+        const { email } = req.proveedorBDD
+        const usuario = await Proveedor.findOne({ email })
+        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+        const foto = usuario.f_perfil
+        if (foto===null) {
+            return res.status(200).json({msg:'No'})
+        }else{
+            return res.status(200).json({msg:'Si'})
+        }
+    } catch (error) {
+        console.log('Error al verificar foto de perfil', error)
+    }
+}
+
 export {
     registroProve,
     Perfil,
@@ -173,5 +204,7 @@ export {
     ConfirmarRecuperarContrasenia,
     detalleProveedor,
     AgregarUbicacion,
-    VerificarUbicacion
+    VerificarUbicacion,
+    SubidaFoto,
+    VerificacionFoto
 }

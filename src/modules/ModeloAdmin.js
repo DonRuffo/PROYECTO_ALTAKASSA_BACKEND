@@ -49,6 +49,10 @@ const AdministradorSchema = new Schema({
     confirmEmail:{
         type:Boolean,
         default:false
+    },
+    f_perfil:{
+        type:String,
+        default:null
     }
 },{
     timestamps:true

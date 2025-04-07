@@ -3,7 +3,9 @@ import { confirmarEmail, loginCliente, RecuperarContrasenia, registroCliente,
 ConfirmarRecuperarContrasenia, Perfil, ActualizarPerfilCliente, ActualizarContraseniaCliente, 
 detalleCliente,
 AgregarUbicacion,
-VerificarUbicacion
+VerificarUbicacion,
+SubidaFoto,
+VerificacionFoto
 } from "../controllers/controladorCliente.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import {validacionRegistroCliente, validacionRecuperarPassCliente, validacionActualizarCliente, validacionActualizarPassCliente } from "../validation/validationCliente.js";
@@ -26,5 +28,7 @@ routeCliente.get('/detalleCliente/:id', verificarAutenticacion, detalleCliente)
 routeCliente.get('/listarOfertas', verificarAutenticacion, listarOfertas)
 routeCliente.post('/guardar-ubicacion-cli', verificarAutenticacion, AgregarUbicacion)
 routeCliente.get('/ubicacion-cli', verificarAutenticacion, VerificarUbicacion)
+routeCliente.post('/fotoCliente', verificarAutenticacion, SubidaFoto)
+routeCliente.get('/ver-foto-cliente', verificarAutenticacion, VerificacionFoto)
 
 export default routeCliente

@@ -10,7 +10,9 @@ import {
         Perfil,
         detalleProveedor,
         AgregarUbicacion,
-        VerificarUbicacion
+        VerificarUbicacion,
+        SubidaFoto,
+        VerificacionFoto
 } from "../controllers/controladorProveedor.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import { validacionActualizarPassProveedor, validacionActualizarProveedor, validacionRecuperarPassProveedor, validacionRegistroProveedor } from "../validation/validationProveedores.js";
@@ -30,6 +32,8 @@ routeProveedor.put('/actualizar-contraseniaProveedor', verificarAutenticacion, v
 routeProveedor.get('/detalleProveedor/:id', verificarAutenticacion, detalleProveedor)
 routeProveedor.post('/guardar-ubicacion-prov', verificarAutenticacion, AgregarUbicacion)
 routeProveedor.get('/ubicacion-prov', verificarAutenticacion, VerificarUbicacion)
+routeProveedor.post('/fotoProveedor', verificarAutenticacion, SubidaFoto)
+routeProveedor.get('/ver-foto-proveedor', verificarAutenticacion, VerificacionFoto)
 
 
 
