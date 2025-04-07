@@ -172,6 +172,5 @@ export {
     ConfirmarRecuperarContrasenia,
     detalleCliente,
     AgregarUbicacion,
-    VerificarUbicacion,
-    ObtenerUbicacion
+    VerificarUbicacion
 }

@@ -8,19 +8,16 @@ import routeCliente from './routers/RouterCliente.js';
 import routerOfertas from './routers/RouterOfertas.js';
 import routerTrabajos from './routers/RouterTrabajos.js';
 import routerPagos from './routers/RouterPagos.js';
-dotenv.config()
-const app = express()
-app.use((req, res, next) => {
-    if (req.method === 'OPTIONS') {
-      res.header('Access-Control-Allow-Origin', 'https://altakassa.vercel.app');
-      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, method');
-      return res.sendStatus(200)
-    }
-  
-    next();
-  });
 
+const app = express()
+const corsOptions = {
+    origin: ['http://localhost:5173', 'https://altakassa.vercel.app'], 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'method'],
+};
+app.use(cors(corsOptions))
+
+dotenv.config()
 app.use(express.json())
 
 app.use(morgan('dev'))
@@ -29,7 +26,7 @@ app.set('port', process.env.PORT || 3000)
 
 app.use('/api', RouterAdmin)
 app.use('/api', routeProveedor)
-app.use('/api', routeCliente)
+app.use('/api',routeCliente)
 app.use('/api', routerOfertas)
 app.use('/api', routerTrabajos)
 app.use('/api', routerPagos)

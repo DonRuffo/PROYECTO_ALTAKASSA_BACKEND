@@ -26,8 +26,8 @@ const pagoTarjeta = async (req,res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: 'http://localhost:3000/api/success',
-            cancel_url: 'http://localhost:3000/api/cancel',
+            success_url: `${process.env.URL_FRONTEND}api/success`,
+            cancel_url: `${process.env.URL_FRONTEND}api/cancel`,
         });
 
         return res.json({msg:'Pago procesado exitosamente',session})
