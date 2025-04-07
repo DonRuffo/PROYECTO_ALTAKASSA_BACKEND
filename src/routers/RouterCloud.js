@@ -1,5 +1,5 @@
 import { Router } from "express";
-import verificarAutenticacion from "../middleware/autenticacion";
+import verificarAutenticacion from "../middleware/autenticacion.js";
 import dotenv from 'dotenv'
 import { v2 as cloudinary } from "cloudinary";
 
