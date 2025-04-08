@@ -193,6 +193,7 @@ const VerificacionFoto = async(req,res)=>{
     }
 }
 
+
 export {
     registroProve,
     Perfil,

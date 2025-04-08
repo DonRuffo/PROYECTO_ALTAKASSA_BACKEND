@@ -13,9 +13,10 @@ cloudinary.config({
 const routeCloud = Router()
 
 routeCloud.get('/firmaAK', verificarAutenticacion, (req, res)=>{
+    const preset = req.query.preset;
     const timestamp = Math.round((new Date()).getTime() / 1000)
     const firmaCAK = cloudinary.utils.api_sign_request(
-        {timestamp},
+        {timestamp, upload_preset:preset},
         cloudinary.config().api_secret
     )
     res.json({
