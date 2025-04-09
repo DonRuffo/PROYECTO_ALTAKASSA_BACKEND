@@ -123,7 +123,7 @@ const SubidaFoto = async(req, res) =>{
         const {email} = req.AdminBDD
         const usuario = await ModeloAdmin.findOne({email})
         if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
-        const secure_url = req.body
+        const {secure_url} = req.body
         if(!secure_url) return res.status(404).json({msg:'No existe una url de Cloud'})
         usuario.f_perfil=secure_url
         await usuario.save()
