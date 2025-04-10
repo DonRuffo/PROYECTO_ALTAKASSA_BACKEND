@@ -138,20 +138,6 @@ const AgregarUbicacion = async (req, res) => {
     }
 }
 
-const VerificarUbicacion = async (req, res) => {
-    try {
-        const { email } = req.clienteBDD
-        const usuario = await ModeloCliente.findOne({ email })
-        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el cliente" })
-        const latitud = usuario.ubicacion.latitud
-        const longitud = usuario.ubicacion.longitud
-
-        if (latitud === null || longitud === null) return res.status(200).json({ msg: "No" })
-        if (latitud !== null && longitud !== null) return res.status(200).json({ msg: "Si" })
-    } catch (error) {
-        res.status(404).json({ msg: "Error al verificar la ubicación", error: error.message })
-    }
-}
 
 const Perfil = async (req, res) =>{
     delete req.clienteBDD.token
@@ -177,22 +163,6 @@ const SubidaFoto = async(req, res) =>{
     }
 }
 
-const VerificacionFoto = async(req,res)=>{
-    try {
-        const { email } = req.clienteBDD
-        const usuario = await ModeloCliente.findOne({ email })
-        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
-        const foto = usuario.f_perfil
-        if (foto===null) {
-            return res.status(200).json({msg:'No'})
-        }else{
-            return res.status(200).json({msg:'Si'})
-        }
-    } catch (error) {
-        console.log('Error al verificar foto de perfil', error)
-    }
-}
-
 export {
     registroCliente,
     Perfil,
@@ -204,7 +174,5 @@ export {
     ConfirmarRecuperarContrasenia,
     detalleCliente,
     AgregarUbicacion,
-    VerificarUbicacion,
-    SubidaFoto,
-    VerificacionFoto
+    SubidaFoto
 }

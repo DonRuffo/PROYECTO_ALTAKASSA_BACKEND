@@ -133,21 +133,6 @@ const SubidaFoto = async(req, res) =>{
     }
 }
 
-const VerificacionFoto = async(req,res)=>{
-    try {
-        const { email } = req.AdminBDD
-        const usuario = await ModeloAdmin.findOne({ email })
-        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
-        const foto = usuario.f_perfil
-        if (foto===null) {
-            return res.status(200).json({msg:'No'})
-        }else{
-            return res.status(200).json({msg:'Si'})
-        }
-    } catch (error) {
-        console.log('Error al verificar foto de perfil', error)
-    }
-}
 
 export {
     register,
@@ -158,6 +143,5 @@ export {
     ActualizarPerfilAdministrador,
     ActualizarContrasenia,
     Perfil,
-    SubidaFoto,
-    VerificacionFoto
+    SubidaFoto
 }

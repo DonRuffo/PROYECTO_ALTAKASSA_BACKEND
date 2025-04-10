@@ -7,8 +7,8 @@ import { confirmarEmail,
     ActualizarPerfilAdministrador,
     ActualizarContrasenia, 
     Perfil,
-    SubidaFoto,
-    VerificacionFoto} from "../controllers/ControladorAdmin.js";
+    SubidaFoto
+} from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
 
@@ -26,6 +26,5 @@ router.get('/perfil-admin', verificarAutenticacion , Perfil)
 router.put('/actualizar-perfil', verificarAutenticacion, ActualizarPerfilAdministrador)
 router.put('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrasenia)
 router.post('/fotoAdmin', verificarAutenticacion, SubidaFoto)
-router.get('/ver-foto-admin', verificarAutenticacion, VerificacionFoto)
 
 export default router
