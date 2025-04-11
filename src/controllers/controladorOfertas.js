@@ -90,7 +90,7 @@ const eliminarOferta = async (req,res) =>{
 const misOfertas = async (req,res) => {
     try {
         const ofertas = await ModeloOfertas.find({ proveedor: req.proveedorBDD._id })
-            .populate('proveedor', 'nombre email');
+            .populate('proveedor', 'nombre apellido email');
 
         res.status(200).json(ofertas);
     } catch (error) {
@@ -101,7 +101,7 @@ const misOfertas = async (req,res) => {
 
 const listarOfertas = async (req,res) => {
     try {
-        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email');
+        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email f_perfil');
         res.status(200).json(ofertas);
     } catch (error) {
         console.log(error);
