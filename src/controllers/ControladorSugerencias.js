@@ -13,7 +13,7 @@ const EnviarComentarios = async (req, res) => {
         })
         await SugerenciasBDD.save()
     } else {
-        const comentario = await new ModeloSugerencias(req.body)
+        const comentario = new ModeloSugerencias(req.body)
         await comentario.save()
     }
     res.status(200).json({msg:'Comentario enviado'})
