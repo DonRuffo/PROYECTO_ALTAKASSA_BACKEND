@@ -9,6 +9,7 @@ import routerOfertas from './routers/RouterOfertas.js';
 import routerTrabajos from './routers/RouterTrabajos.js';
 import routerPagos from './routers/RouterPagos.js';
 import routeCloud from './routers/RouterCloud.js';
+import routeSug from './routers/RouterSugerencias.js';
 
 const app = express()
 const corsOptions = {
@@ -32,6 +33,7 @@ app.use('/api', routerOfertas)
 app.use('/api', routerTrabajos)
 app.use('/api', routerPagos)
 app.use('/api', routeCloud)
+app.use('/api', routeSug)
 
 app.get('/', (req, res) => { res.send("Servidor levantado") })
 
