@@ -1,6 +1,6 @@
 import ModeloCliente from "../modules/ModeloCliente.js";
 import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js";
-import generarJWT  from "../helpers/crearJWT.js";
+import generarJWT from "../helpers/crearJWT.js";
 import mongoose from "mongoose";
 
 const registroCliente = async (req, res) => {
@@ -19,7 +19,7 @@ const registroCliente = async (req, res) => {
 
     await sendMailToAdmin(email, token)
 
-    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol:nuevoCliente.rol})
+    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol: nuevoCliente.rol })
 }
 const confirmarEmail = async (req, res) => {
     const { token } = req.params
@@ -48,13 +48,13 @@ const loginCliente = async (req, res) => {
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
 
     const token = generarJWT(ClienteBDD._id, "cliente")
-    
-    const {_id} = ClienteBDD
-    
+
+    const { _id } = ClienteBDD
+
     res.status(200).json({
         token,
         _id,
-        rol:'cliente'
+        rol: 'cliente'
     })
 }
 
@@ -72,61 +72,61 @@ const ActualizarPerfilCliente = async (req, res) => {
     res.status(200).json({ msg: "Cambios guardados", ClienteBDD })
 }
 
-const ActualizarContraseniaCliente = async(req, res)=>{
-    const {email} = req.clienteBDD
-    const {contrasenia, nuevaContrasenia} = req.body
+const ActualizarContraseniaCliente = async (req, res) => {
+    const { email } = req.clienteBDD
+    const { contrasenia, nuevaContrasenia } = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
-    const ClienteBDD = await ModeloCliente.findOne({email})
+    const ClienteBDD = await ModeloCliente.findOne({ email })
     if (!ClienteBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
     const Verificacion = await ClienteBDD.CompararPasswordCliente(contrasenia)
-    if(!Verificacion) return res.status(404).json({msg:"La contraseña actual no es correcta"})
+    if (!Verificacion) return res.status(404).json({ msg: "La contraseña actual no es correcta" })
     const EncriptarContra = await ClienteBDD.EncriptarContrasenia(nuevaContrasenia)
     ClienteBDD.contrasenia = EncriptarContra
     await ClienteBDD.save()
-    res.status(200).json({msg:"Contraseña actualizada"})
+    res.status(200).json({ msg: "Contraseña actualizada" })
 }
 
-const RecuperarContrasenia = async (req, res) =>{
-    const {email} = req.body
-    if(Object.values(req.body).includes("")) return res.status(404).json({msg:"Por favor, ingrese su correo"})
-    const ClienteBDD = await ModeloCliente.findOne({email})
-    if(!ClienteBDD) return res.status(404).json({msg:"La cuenta no existe"})
+const RecuperarContrasenia = async (req, res) => {
+    const { email } = req.body
+    if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Por favor, ingrese su correo" })
+    const ClienteBDD = await ModeloCliente.findOne({ email })
+    if (!ClienteBDD) return res.status(404).json({ msg: "La cuenta no existe" })
     ClienteBDD.token = ClienteBDD.GenerarToken()
     sendMailToAdminRestore(email, ClienteBDD.token)
     await ClienteBDD.save()
-    res.status(200).json({msg:"Se ha enviado a su correo un enlace para restablecer la contraseña"})
+    res.status(200).json({ msg: "Se ha enviado a su correo un enlace para restablecer la contraseña" })
 }
 
-const ConfirmarRecuperarContrasenia = async (req, res) =>{
-    const {token} = req.params
-    const {email, contrasenia} = req.body
-    if(!(token)) return res.status(404).json({msg:"Token no identificado"})
-    if(Object.values(req.body).includes("")) return res.status(404).json({msg:"Por favor, ingrese sus nuevas credenciales"})
-    const ClienteBDD = await ModeloCliente.findOne({email})
-    if(!ClienteBDD) return res.status(404).json({msg:"La cuenta no existe, correo inexistente"})    
-    if(ClienteBDD?.token !== token) return res.status(404).json({msg:"Token no autorizado"})
+const ConfirmarRecuperarContrasenia = async (req, res) => {
+    const { token } = req.params
+    const { email, contrasenia } = req.body
+    if (!(token)) return res.status(404).json({ msg: "Token no identificado" })
+    if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Por favor, ingrese sus nuevas credenciales" })
+    const ClienteBDD = await ModeloCliente.findOne({ email })
+    if (!ClienteBDD) return res.status(404).json({ msg: "La cuenta no existe, correo inexistente" })
+    if (ClienteBDD?.token !== token) return res.status(404).json({ msg: "Token no autorizado" })
     const nuevaContrasenia = await ClienteBDD.EncriptarContrasenia(contrasenia)
     ClienteBDD.contrasenia = nuevaContrasenia
     ClienteBDD.token = null
     ClienteBDD.status = true
     await ClienteBDD.save()
-    res.status(200).json({msg:"Contraseña restablecida con éxito"})
+    res.status(200).json({ msg: "Contraseña restablecida con éxito" })
 }
 
 
-const detalleCliente = async(req,res)=>{
-    const {id} = req.params
-    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, debe ser un id válido`});
+const detalleCliente = async (req, res) => {
+    const { id } = req.params
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: `Lo sentimos, debe ser un id válido` });
     const ClienteBDD = await ModeloCliente.findById(id).select("-password")
-    if(!ClienteBDD) return res.status(404).json({msg:`Lo sentimos, no existe el cliente ${id}`})
-    res.status(200).json({msg:ClienteBDD})
+    if (!ClienteBDD) return res.status(404).json({ msg: `Lo sentimos, no existe el cliente ${id}` })
+    res.status(200).json({ msg: ClienteBDD })
 }
 
 const AgregarUbicacion = async (req, res) => {
     try {
         const { email } = req.clienteBDD
         const { longitude, latitude } = req.body
-        if(!longitude || !latitude) return res.status(400).json({msg:'Geolocalización incompleta'})
+        if (!longitude || !latitude) return res.status(400).json({ msg: 'Geolocalización incompleta' })
         const usuario = await ModeloCliente.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el cliente" })
         usuario.ubicacion.latitud = latitude
@@ -134,12 +134,12 @@ const AgregarUbicacion = async (req, res) => {
         await usuario.save()
         res.status(200).json({ msg: "Ubicación guardada con éxito" })
     } catch (error) {
-        res.status(404).json({ msg: "Error al actualizar la ubicación", error:error.message })
+        res.status(404).json({ msg: "Error al actualizar la ubicación", error: error.message })
     }
 }
 
 
-const Perfil = async (req, res) =>{
+const Perfil = async (req, res) => {
     delete req.clienteBDD.token
     delete req.clienteBDD.confirmEmail
     delete req.clienteBDD.createdAt
@@ -148,44 +148,56 @@ const Perfil = async (req, res) =>{
     res.status(200).json(req.clienteBDD)
 }
 
-const SubidaFoto = async(req, res) =>{
+const SubidaFoto = async (req, res) => {
     try {
-        const {email} = req.clienteBDD
-        const usuario = await ModeloCliente.findOne({email})
-        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
-        const {secure_url} = req.body
-        if(!secure_url) return res.status(404).json({msg:'No existe una url de Cloud'})
-        usuario.f_perfil=secure_url
+        const { email } = req.clienteBDD
+        const usuario = await ModeloCliente.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
+        const { secure_url } = req.body
+        if (!secure_url) return res.status(404).json({ msg: 'No existe una url de Cloud' })
+        usuario.f_perfil = secure_url
         await usuario.save()
-        res.status(200).json({msg:'Imagen guardada'})
+        res.status(200).json({ msg: 'Imagen guardada' })
     } catch (error) {
         console.log('Hubo un error al subir la imagen', error)
     }
 }
 
-const verificarFoto = async(req, res) =>{
+const verificarFoto = async (req, res) => {
     try {
-        const {email} = req.clienteBDD
-        const usuario = await ModeloCliente.findOne({email})
-        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+        const { email } = req.clienteBDD
+        const usuario = await ModeloCliente.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
         const foto = usuario.f_perfil
-        if(foto === null) return res.status(200).json({msg:'No'})
-        if(foto !== null) return res.status(200).json({msg:'Si'})
+        if (foto === null) return res.status(200).json({ msg: 'No' })
+        if (foto !== null) return res.status(200).json({ msg: 'Si' })
     } catch (error) {
         console.log('Error al intentar conectarse al servidor')
     }
 }
 
-const verificarUbicacion = async (req,res)=>{
+const verificarUbicacion = async (req, res) => {
     try {
-        const {email} = req.clienteBDD
-        const usuario = await ModeloCliente.findOne({email})
-        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+        const { email } = req.clienteBDD
+        const usuario = await ModeloCliente.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
         const ubicacionLat = usuario.ubicacion.latitud
         const ubicacionLog = usuario.ubicacion.longitud
-        
-        if(ubicacionLat === null || ubicacionLog === null) return res.status(200).json({msg:'No'})
-        if(ubicacionLat !== null && ubicacionLog !== null) return res.status(200).json({msg:'Si'})
+
+        if (ubicacionLat === null || ubicacionLog === null) return res.status(200).json({ msg: 'No' })
+        if (ubicacionLat !== null && ubicacionLog !== null) return res.status(200).json({ msg: 'Si' })
+    } catch (error) {
+        console.log('Error al intentar conectarse al servidor')
+    }
+}
+const obtenerUbicacion = async (req, res) => {
+    try {
+        const { email } = req.clienteBDD
+        const usuario = await ModeloCliente.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
+        const ubiActual = usuario.ubicacion
+        if(!ubiActual) return res.status(404).json({msg:'No tiene ubicación almacenada'})
+        res.status(200).json({ubiActual})
     } catch (error) {
         console.log('Error al intentar conectarse al servidor')
     }
@@ -204,5 +216,6 @@ export {
     AgregarUbicacion,
     SubidaFoto,
     verificarFoto,
-    verificarUbicacion
+    verificarUbicacion,
+    obtenerUbicacion
 }

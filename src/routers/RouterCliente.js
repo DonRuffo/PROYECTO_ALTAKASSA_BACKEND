@@ -5,7 +5,8 @@ detalleCliente,
 AgregarUbicacion,
 SubidaFoto,
 verificarFoto,
-verificarUbicacion
+verificarUbicacion,
+obtenerUbicacion
 } from "../controllers/controladorCliente.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import {validacionRegistroCliente, validacionRecuperarPassCliente, validacionActualizarCliente, validacionActualizarPassCliente } from "../validation/validationCliente.js";
@@ -30,5 +31,6 @@ routeCliente.post('/guardar-ubicacion-cli', verificarAutenticacion, AgregarUbica
 routeCliente.post('/fotoCliente', verificarAutenticacion, SubidaFoto)
 routeCliente.get('/verFotoCli', verificarAutenticacion, verificarFoto)
 routeCliente.get('/verUbicacionCli', verificarAutenticacion, verificarUbicacion)
+routeCliente.get('/ubiCliente', verificarAutenticacion, obtenerUbicacion)
 
 export default routeCliente
