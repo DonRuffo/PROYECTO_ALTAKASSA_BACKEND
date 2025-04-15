@@ -163,6 +163,34 @@ const SubidaFoto = async(req, res) =>{
     }
 }
 
+const verificarFoto = async(req, res) =>{
+    try {
+        const {email} = req.clienteBDD
+        const usuario = await ModeloCliente.findOne({email})
+        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+        const foto = usuario.f_perfil
+        if(foto === null) return res.status(200).json({msg:'No'})
+        if(foto !== null) return res.status(200).json({msg:'Si'})
+    } catch (error) {
+        console.log('Error al intentar conectarse al servidor')
+    }
+}
+
+const verificarUbicacion = async (req,res)=>{
+    try {
+        const {email} = req.clienteBDD
+        const usuario = await ModeloCliente.findOne({email})
+        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+        const ubicacionLat = usuario.ubicacion.latitud
+        const ubicacionLog = usuario.ubicacion.longitud
+        
+        if(ubicacionLat === null || ubicacionLog === null) return res.status(200).json({msg:'No'})
+        if(ubicacionLat !== null && ubicacionLog !== null) return res.status(200).json({msg:'Si'})
+    } catch (error) {
+        console.log('Error al intentar conectarse al servidor')
+    }
+}
+
 export {
     registroCliente,
     Perfil,
@@ -174,5 +202,7 @@ export {
     ConfirmarRecuperarContrasenia,
     detalleCliente,
     AgregarUbicacion,
-    SubidaFoto
+    SubidaFoto,
+    verificarFoto,
+    verificarUbicacion
 }
