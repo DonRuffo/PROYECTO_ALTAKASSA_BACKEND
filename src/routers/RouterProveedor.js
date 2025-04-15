@@ -32,7 +32,7 @@ routeProveedor.put('/actualizar-contraseniaProveedor', verificarAutenticacion, v
 routeProveedor.get('/detalleProveedor/:id', verificarAutenticacion, detalleProveedor)
 routeProveedor.post('/guardar-ubicacion-prov', verificarAutenticacion, AgregarUbicacion)
 routeProveedor.post('/fotoProveedor', verificarAutenticacion, SubidaFoto)
-routeProveedor.get('verFotoProv', verificarAutenticacion, verificarFoto)
+routeProveedor.get('/verFotoProv', verificarAutenticacion, verificarFoto)
 routeProveedor.get('/verUbicacionProv', verificarAutenticacion, verificarUbicacion)
 
 
