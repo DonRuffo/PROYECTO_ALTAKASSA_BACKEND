@@ -57,7 +57,7 @@ const obtenerTrabajosDeUnProveedor =async (req, res)=>{
 
 const obtenerTrabajosPorProveedor = async (req, res) =>{
     try {
-        const trabajos = await ModeloTrabajos.find({proveedor:req.proveedorBDD._id})
+        const trabajos = await ModeloTrabajos.find({proveedor:req.usuarioBDD._id})
             .populate('cliente', 'nombre apellido email')
             .populate('proveedor', 'nombre apellido email')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
@@ -72,7 +72,7 @@ const obtenerTrabajosPorProveedor = async (req, res) =>{
 
 const obtenerTrabajosPorCliente = async (req, res) =>{
     try {
-        const trabajos = await ModeloTrabajos.find({cliente:req.clienteBDD._id})
+        const trabajos = await ModeloTrabajos.find({cliente:req.usuarioBDD._id})
             .populate('cliente', 'nombre apellido email')
             .populate('proveedor', 'nombre apellido email')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
