@@ -3,7 +3,7 @@ import mongoose, {Schema, model} from 'mongoose';
 const OfertasSchema = new Schema({
     proveedor:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Proveedor"
+        ref:"Usuario"
     },
     precioPorDia:{
         type:Number,

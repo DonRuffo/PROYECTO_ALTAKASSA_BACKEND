@@ -3,11 +3,11 @@ import mongoose, {Schema, model} from 'mongoose';
 const TrabajosSchema = new Schema({
     cliente:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Cliente"
+        ref:"Usuario"
     },
     proveedor:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Proveedor"
+        ref:"Usuario"
     },
     oferta: {
         type: mongoose.Schema.Types.ObjectId,

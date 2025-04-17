@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Administrador from '../modules/ModeloAdmin.js'
-import Cliente from '../modules/ModeloCliente.js'
-import Proveedor from '../modules/ModeloProveedor.js'
+import Usuario from '../modules/ModuloUsuario.js'
 
 const verificarAutenticacion = async (req, res, next) => {
 
@@ -13,12 +12,8 @@ const verificarAutenticacion = async (req, res, next) => {
             req.AdminBDD = await Administrador.findById(id).lean().select("-contrasenia")
             next()
         }
-        else if (rol === "cliente") {
-            req.clienteBDD = await Cliente.findById(id).lean().select("-contrasenia")
-            next()
-        }
-        else if (rol === "proveedor") {
-            req.proveedorBDD = await Proveedor.findById(id).lean().select("-contrasenia")
+        else if (rol === "usuario") {
+            req.usuarioBDD = await Usuario.findById(id).lean().select("-contrasenia")
             next()
         }
         else {
