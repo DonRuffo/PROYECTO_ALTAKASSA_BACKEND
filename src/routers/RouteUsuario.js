@@ -2,19 +2,20 @@ import { Router } from "express";
 import { ActualizarContraseniaUsuario, ActualizarPerfilUsuario, AgregarUbicacionActual, AgregarUbicacionTrabajo, confirmarEmail, ConfirmarRecuperarContrasenia, detalleUsuario, loginUsuario, obtenerUbicacion, Perfil, RecuperarContrasenia, registroUsuario, SubidaFoto, verificarFoto, verificarUbicacion } from "../controllers/ControladorUsuario.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import { listarOfertas } from "../controllers/controladorOfertas.js";
+import { validacionActualizarPassUsuario, validacionActualizarUsuario, validacionRecuperarPassUsuario, validacionRegistroUsuario } from "../validation/validationUsuario.js";
 
 const routeUsuario = Router()
 
-routeUsuario.post('/registroUser', registroUsuario)
+routeUsuario.post('/registroUser', validacionRegistroUsuario() ,registroUsuario)
 routeUsuario.get('/confirmarUser/:token', confirmarEmail)
 routeUsuario.post('/loginUser', loginUsuario)
-routeUsuario.post('/recuperarPassUser', RecuperarContrasenia)
+routeUsuario.post('/recuperarPassUser', validacionRecuperarPassUsuario() ,RecuperarContrasenia)
 routeUsuario.post('/restablecerPassUser', ConfirmarRecuperarContrasenia)
 
 //privadas
 routeUsuario.get('/perfilUser', verificarAutenticacion, Perfil)
-routeUsuario.put('/actualizarPerfilUser', verificarAutenticacion, ActualizarPerfilUsuario)
-routeUsuario.put('/actualizarPassUser', verificarAutenticacion, ActualizarContraseniaUsuario)
+routeUsuario.put('/actualizarPerfilUser', verificarAutenticacion, validacionActualizarUsuario() ,ActualizarPerfilUsuario)
+routeUsuario.put('/actualizarPassUser', verificarAutenticacion, validacionActualizarPassUsuario() ,ActualizarContraseniaUsuario)
 routeUsuario.get('/detalleUser', verificarAutenticacion, detalleUsuario)
 routeUsuario.get('/listarOfertas', verificarAutenticacion, listarOfertas)
 routeUsuario.post('/guardar-ubicacion-user', verificarAutenticacion, AgregarUbicacionActual)

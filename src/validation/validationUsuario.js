@@ -1,6 +1,6 @@
 import { check, validationResult } from "express-validator";
 
-const validacionRegistroCliente = () => {
+const validacionRegistroUsuario = () => {
     return [
         check('nombre')
         .trim()
@@ -51,7 +51,7 @@ const validacionRegistroCliente = () => {
     ]
 }
 
-const validacionRecuperarPassCliente = () => {
+const validacionRecuperarPassUsuario = () => {
     return [
 
         check('contrasenia')
@@ -76,7 +76,7 @@ const validacionRecuperarPassCliente = () => {
     ]
 }
 
-const validacionActualizarCliente = () => {
+const validacionActualizarUsuario = () => {
     return [
         check('nombre')
         .optional().trim()
@@ -124,7 +124,7 @@ const validacionActualizarCliente = () => {
     ]
 }
 
-const validacionActualizarPassCliente = () => {
+const validacionActualizarPassUsuario = () => {
     return [
 
         check('nuevaContrasenia')
@@ -150,8 +150,8 @@ const validacionActualizarPassCliente = () => {
 }
 
 export {
-    validacionRegistroCliente,
-    validacionRecuperarPassCliente,
-    validacionActualizarCliente,
-    validacionActualizarPassCliente
+    validacionRegistroUsuario,
+    validacionRecuperarPassUsuario,
+    validacionActualizarUsuario,
+    validacionActualizarPassUsuario
 }
