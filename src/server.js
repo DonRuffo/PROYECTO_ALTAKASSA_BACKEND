@@ -3,8 +3,6 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cors from 'cors';
 import RouterAdmin from './routers/RouterAdmin.js';
-import routeProveedor from './routers/RouterProveedor.js';
-import routeCliente from './routers/RouterCliente.js';
 import routerOfertas from './routers/RouterOfertas.js';
 import routerTrabajos from './routers/RouterTrabajos.js';
 import routerPagos from './routers/RouterPagos.js';
@@ -28,8 +26,6 @@ app.use(morgan('dev'))
 app.set('port', process.env.PORT || 3000)
 
 app.use('/api', RouterAdmin)
-app.use('/api', routeProveedor)
-app.use('/api',routeCliente)
 app.use('/api', routerOfertas)
 app.use('/api', routerTrabajos)
 app.use('/api', routerPagos)
