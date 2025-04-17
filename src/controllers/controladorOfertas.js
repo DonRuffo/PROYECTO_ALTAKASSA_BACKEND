@@ -7,7 +7,7 @@ const crearOferta = async (req, res) => {
         if (Object.values(req.body).includes("")) return res. status (400).json({msg: "Lo sentimos, debe llenar todo los campos."})
 
         const nuevaOferta = new ModeloOfertas({
-            proveedor: req.proveedorBDD._id,
+            proveedor: req.usuarioBDD._id,
             precioPorDia,
             precioPorHora,
             servicio,
@@ -76,20 +76,20 @@ const eliminarOferta = async (req,res) =>{
 
         if(!oferta) return res.status(404).json({msg: "Oferta no encontrada"})
 
-        if (oferta.proveedor.toString() !== req.proveedorBDD._id.toString()) return res.status(403).json({ msg: "No tienes permisos para eliminar esta oferta" })
+        if (oferta.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(404).json({ msg: "No tienes permisos para eliminar esta oferta" })
 
         await oferta.deleteOne();
         res.status(200).json({msg: 'Oferta eliminada correctamente'})
 
     }catch(error){
         console.log(error)
-        res.status(500).json({msg:"Error al elimianr la oferta"})
+        res.status(500).json({msg:"Error al eliminar la oferta"})
     }
 }
 
 const misOfertas = async (req,res) => {
     try {
-        const ofertas = await ModeloOfertas.find({ proveedor: req.proveedorBDD._id })
+        const ofertas = await ModeloOfertas.find({ proveedor: req.usuarioBDD._id })
             .populate('proveedor', 'nombre apellido email');
 
         res.status(200).json(ofertas);
