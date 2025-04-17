@@ -49,7 +49,17 @@ const Usuario = new Schema({
         type: Boolean,
         default: true
     },
-    ubicacion: {
+    ubicacionActual: {
+        longitud: {
+            type: Number,
+            default: null
+        },
+        latitud: {
+            type: Number,
+            default: null
+        }
+    },
+    ubicacionTrabajo: {
         longitud: {
             type: Number,
             default: null

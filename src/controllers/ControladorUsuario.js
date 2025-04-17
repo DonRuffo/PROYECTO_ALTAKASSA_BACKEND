@@ -122,15 +122,15 @@ const detalleUsuario = async (req, res) => {
     res.status(200).json({ msg: UsuarioBDD })
 }
 
-const AgregarUbicacion = async (req, res) => {
+const AgregarUbicacionActual = async (req, res) => {
     try {
         const { email } = req.usuarioBDD
         const { longitude, latitude } = req.body
         if (!longitude || !latitude) return res.status(400).json({ msg: 'Geolocalización incompleta' })
         const usuario = await ModuloUsuario.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el Usuario" })
-        usuario.ubicacion.latitud = latitude
-        usuario.ubicacion.longitud = longitude
+        usuario.ubicacionActual.latitud = latitude
+        usuario.ubicacionActual.longitud = longitude
         await usuario.save()
         res.status(200).json({ msg: "Ubicación guardada con éxito" })
     } catch (error) {
@@ -138,6 +138,21 @@ const AgregarUbicacion = async (req, res) => {
     }
 }
 
+const AgregarUbicacionTrabajo = async (req, res) => {
+    try {
+        const { email } = req.usuarioBDD
+        const { longitude, latitude } = req.body
+        if (!longitude || !latitude) return res.status(400).json({ msg: 'Geolocalización incompleta' })
+        const usuario = await ModuloUsuario.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: "Lo sentimos, no existe el Usuario" })
+        usuario.ubicacionTrabajo.latitud = latitude
+        usuario.ubicacionTrabajo.longitud = longitude
+        await usuario.save()
+        res.status(200).json({ msg: "Ubicación guardada con éxito" })
+    } catch (error) {
+        res.status(404).json({ msg: "Error al actualizar la ubicación", error: error.message })
+    }
+}
 
 const Perfil = async (req, res) => {
     delete req.usuarioBDD.token
@@ -213,7 +228,8 @@ export {
     RecuperarContrasenia,
     ConfirmarRecuperarContrasenia,
     detalleUsuario,
-    AgregarUbicacion,
+    AgregarUbicacionActual,
+    AgregarUbicacionTrabajo,
     SubidaFoto,
     verificarFoto,
     verificarUbicacion,
