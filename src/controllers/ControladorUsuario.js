@@ -59,7 +59,7 @@ const loginUsuario = async (req, res) => {
 }
 
 const ActualizarPerfilUsuario = async (req, res) => {
-    const { email } = req.UsuarioBDD
+    const { email } = req.usuarioBDD
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
     const UsuarioBDD = await ModuloUsuario.findOne({ email })
     if (!UsuarioBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
@@ -191,13 +191,13 @@ const verificarFoto = async (req, res) => {
     }
 }
 
-const verificarUbicacion = async (req, res) => {
+const verificarUbicacionActual = async (req, res) => {
     try {
         const { email } = req.usuarioBDD
         const usuario = await ModuloUsuario.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
-        const ubicacionLat = usuario.ubicacion.latitud
-        const ubicacionLog = usuario.ubicacion.longitud
+        const ubicacionLat = usuario.ubicacionActual.latitud
+        const ubicacionLog = usuario.ubicacionActual.longitud
 
         if (ubicacionLat === null || ubicacionLog === null) return res.status(200).json({ msg: 'No' })
         if (ubicacionLat !== null && ubicacionLog !== null) return res.status(200).json({ msg: 'Si' })
@@ -205,12 +205,28 @@ const verificarUbicacion = async (req, res) => {
         console.log('Error al intentar conectarse al servidor')
     }
 }
+
+const verificarUbicacionTrabajo = async (req, res) => {
+    try {
+        const { email } = req.usuarioBDD
+        const usuario = await ModuloUsuario.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
+        const ubicacionLat = usuario.ubicacionTrabajo.latitud
+        const ubicacionLog = usuario.ubicacionTrabajo.longitud
+
+        if (ubicacionLat === null || ubicacionLog === null) return res.status(200).json({ msg: 'No' })
+        if (ubicacionLat !== null && ubicacionLog !== null) return res.status(200).json({ msg: 'Si' })
+    } catch (error) {
+        console.log('Error al intentar conectarse al servidor')
+    }
+}
+
 const obtenerUbicacion = async (req, res) => {
     try {
         const { email } = req.usuarioBDD
         const usuario = await ModuloUsuario.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
-        const ubiActual = usuario.ubicacion
+        const ubiActual = usuario.ubicacionActual
         if(!ubiActual) return res.status(404).json({msg:'No tiene ubicación almacenada'})
         res.status(200).json({ubiActual})
     } catch (error) {
@@ -232,6 +248,7 @@ export {
     AgregarUbicacionTrabajo,
     SubidaFoto,
     verificarFoto,
-    verificarUbicacion,
+    verificarUbicacionActual,
+    verificarUbicacionTrabajo,
     obtenerUbicacion
 }
