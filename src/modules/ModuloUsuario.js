@@ -96,7 +96,7 @@ Usuario.methods.EncriptarContrasenia = async function(password){
     return ContraEncriptada
 }
 
-Usuario.methods.CompararPasswordCliente = async function(password){
+Usuario.methods.CompararPasswordUsuario = async function(password){
     const comparacion = await bcrypt.compare(password, this.contrasenia)
     return comparacion
 }

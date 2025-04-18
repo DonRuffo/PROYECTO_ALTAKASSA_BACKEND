@@ -10,7 +10,7 @@ routeUsuario.post('/registroUser', validacionRegistroUsuario() ,registroUsuario)
 routeUsuario.get('/confirmarUser/:token', confirmarEmail)
 routeUsuario.post('/loginUser', loginUsuario)
 routeUsuario.post('/recuperarPassUser', validacionRecuperarPassUsuario() ,RecuperarContrasenia)
-routeUsuario.post('/restablecerPassUser', ConfirmarRecuperarContrasenia)
+routeUsuario.post('/restablecerPassUser/:token', ConfirmarRecuperarContrasenia)
 
 //privadas
 routeUsuario.get('/perfilUser', verificarAutenticacion, Perfil)
