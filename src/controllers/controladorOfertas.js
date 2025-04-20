@@ -49,7 +49,7 @@ const actualizarOferta = async (req, res) =>{
         
         if (!oferta) return res.status(404).json({msg: "Oferta no encontrada"})
 
-        if (oferta.proveedor.toString() !== req.proveedorBDD._id.toString()) return res.status(403).json({msg: "No tiene permisos para actulaizar esta oferta"})
+        if (oferta.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(403).json({msg: "No tiene permisos para actulaizar esta oferta"})
 
         const { precioPorDia, precioPorHora, servicio, descripcion } = req.body
         oferta.precioPorDia = precioPorDia || oferta.precioPorDia
@@ -91,7 +91,6 @@ const misOfertas = async (req,res) => {
     try {
         const ofertas = await ModeloOfertas.find({ proveedor: req.usuarioBDD._id })
             .populate('proveedor', 'nombre apellido email');
-
         res.status(200).json(ofertas);
     } catch (error) {
         console.log(error);
