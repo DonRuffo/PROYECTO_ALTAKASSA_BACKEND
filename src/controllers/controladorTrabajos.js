@@ -58,8 +58,8 @@ const obtenerTrabajosDeUnProveedor =async (req, res)=>{
 const obtenerTrabajosPorProveedor = async (req, res) =>{
     try {
         const trabajos = await ModeloTrabajos.find({proveedor:req.usuarioBDD._id})
-            .populate('cliente', 'nombre apellido email')
-            .populate('proveedor', 'nombre apellido email')
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajos) return res.status(404).json({ msg: "No tienes solicitudes de trabajo" })
         res.status(200).json(trabajos)
@@ -73,8 +73,8 @@ const obtenerTrabajosPorProveedor = async (req, res) =>{
 const obtenerTrabajosPorCliente = async (req, res) =>{
     try {
         const trabajos = await ModeloTrabajos.find({cliente:req.usuarioBDD._id})
-            .populate('cliente', 'nombre apellido email')
-            .populate('proveedor', 'nombre apellido email')
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajos) return res.status(404).json({ msg: "No tienes solicitudes de trabajo" })
         res.status(200).json(trabajos)
