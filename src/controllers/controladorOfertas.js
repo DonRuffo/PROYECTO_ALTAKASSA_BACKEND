@@ -29,7 +29,7 @@ const verOferta = async(req,res)=>{
 
     try{
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({msg: "ID no válido."})
-        const oferta = await ModeloOfertas.findById(id).populate('proveedor','nombre apellido email f_perfil ubicacion')
+        const oferta = await ModeloOfertas.findById(id).populate('proveedor','nombre apellido email f_perfil ubicacionTrabajo')
         if(!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
         res.status(200).json(oferta)
 
