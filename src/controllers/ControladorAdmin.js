@@ -1,8 +1,8 @@
 import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js";
 import ModeloAdmin from "../modules/ModeloAdmin.js";
+import ModeloPlanes from "../modules/ModeloPlanes.js";
 import generarJWT from "../helpers/crearJWT.js";
 import bcrypt from 'bcrypt';
-import ModeloPlanes from "../modules/ModeloPlanes.js";
 
 const SUPERADMIN_EMAIL = process.env.SUPERADMIN_EMAIL;
 const SUPERADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD;
@@ -44,8 +44,7 @@ const confirmarEmail = async (req, res) => {
 const login = async (req, res) => {
     const { email, contrasenia } = req.body
 
-    if (await isSuperUser(email, contrasenia)) {
-        // Lógica para manejar el inicio de sesión del superusuario
+    if (await isSuperUser(email, contrasenia)) { 
         const token = generarJWT('superAdmin_id', 'administrador');
         return res.status(200).json({ token, rol: 'superAdmin' });
     }

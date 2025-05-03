@@ -29,8 +29,8 @@ const pagoPlan = async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.URL_BACKEND}/success/?_id=${usuario._id}`,
-            cancel_url: `${process.env.URL_BACKEND}/cancel`
+            success_url: `${process.env.URL_FRONTEND}/success/?_id=${usuario._id}`,
+            cancel_url: `${process.env.URL_FRONTEND}/cancel`
         });
 
         return res.json({ msg: 'Pago procesado, redirigiendo...', session })
