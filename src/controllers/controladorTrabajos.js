@@ -181,7 +181,7 @@ const cancelarTrabajo = async (req, res) =>{
         trabajo.status = "Cancelado";
         const trabajoActualizado = await trabajo.save();
         res.status(200).json({
-            msg: "Has cancelado la solicitud",
+            msg: "Has cancelado el trabajo",
             trabajoActualizado
         });
     } catch (error) {
