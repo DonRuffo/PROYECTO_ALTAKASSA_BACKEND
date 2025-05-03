@@ -5,8 +5,8 @@ const crearOferta = async (req, res) => {
     const {precioPorDia, precioPorHora, servicio, descripcion} = req.body;
     const usuario = await ModuloUsuario.findById(req.usuarioBDD._id);
 
-    if (usuario.monedasOfertas === 0) {
-        return res.status(403).json({ msg: "Has alcanzado el límite de ofertas gratuitas. Considera cambiar a un plan premium." });
+    if (usuario.cantidadOfertas === 0) {
+        return res.status(403).json({ msg: "Has alcanzado el límite de ofertas." });
     }
 
     try{
@@ -21,11 +21,10 @@ const crearOferta = async (req, res) => {
         })
 
         await nuevaOferta.save()
-
-        usuario.monedasOfertas -= 1;
-        await usuario.save();
-
         res.status(200).json({msg: "Oferta creada correctamente.", oferta: nuevaOferta})
+
+        usuario.cantidadOfertas -= 1
+        await usuario.save()
 
     }catch(error){
         console.log(error)

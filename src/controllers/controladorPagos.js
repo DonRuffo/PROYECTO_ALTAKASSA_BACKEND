@@ -11,8 +11,7 @@ const pagoPlan = async (req, res) => {
         const plan = await ModeloPlanes.findById(id);
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Plan no encontrado" })
         
-        const { _id } = req.body;
-        const usuario = await ModeloUsuario.findById(_id)
+        const usuario = await ModeloUsuario.findById(req.usuarioBDD._id)
         if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).json({ msg: "Usuario no encontrado" })
 
         const session = await stripe.checkout.sessions.create({
@@ -42,8 +41,7 @@ const pagoPlan = async (req, res) => {
 }
 const success = async (req, res) => {
     try {
-        const { _id } = req.query;
-        const usuario = await ModeloUsuario.findById(_id)
+        const usuario = await ModeloUsuario.findById(req.usuarioBDD._id)
         if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).json({ msg: "Usuario no encontrado" })
 
         usuario.monedasOfertas += 5;

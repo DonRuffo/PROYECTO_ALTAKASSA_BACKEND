@@ -5,7 +5,7 @@ import verificarAutenticacion from "../middleware/autenticacion.js";
 const routerPagos = Router()
 
 routerPagos.post('/pagoPlan/:id',verificarAutenticacion, pagoPlan)
-routerPagos.get('/success',success)
-routerPagos.get('/cancel',cancel)
+routerPagos.get('/success', verificarAutenticacion ,success)
+routerPagos.get('/cancel', verificarAutenticacion ,cancel)
 
 export default routerPagos

@@ -2,6 +2,7 @@ import ModeloTrabajos from "../modules/ModeloTrabajos.js";
 import mongoose from "mongoose";
 import Ofertas from '../modules/ModeloOfertas.js'
 import Trabajos from '../modules/ModeloTrabajos.js'
+import ModuloUsuario from "../modules/ModuloUsuario.js";
 
 const crearTrabajo = async (req, res) => {
     try {
@@ -127,6 +128,10 @@ const eliminarTrabajo = async (req, res) => {
 
 const agendarTrabajo = async (req, res) => {
     const { id } = req.params;
+    const usuario = await ModuloUsuario.findById(req.usuarioBDD._id)
+    if(usuario.monedasTrabajos === 0){
+        return res.status(403).json({msg: "Ya no tienes créditos, actualiza tu plan"})
+    }
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
         const trabajo = await ModeloTrabajos.findById(id);
@@ -134,7 +139,9 @@ const agendarTrabajo = async (req, res) => {
         if (trabajo.status !== "En espera") return res.status(400).json({ msg: "El trabajo ya no puede ser agendar o ya fue agendado" });
 
         trabajo.status = "Agendado";
+        usuario.monedasTrabajos -=1;
         const trabajoActualizado = await trabajo.save();
+        await usuario.save()
         res.status(200).json({
             msg: "Has aceptado la solicitud",
             trabajoActualizado
@@ -165,6 +172,24 @@ const rechazarTrabajo = async (req, res) => {
     }
 }
 
+const cancelarTrabajo = async (req, res) =>{
+    const { id } = req.params;
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        const trabajo = await ModeloTrabajos.findById(id);
+        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        trabajo.status = "Cancelado";
+        const trabajoActualizado = await trabajo.save();
+        res.status(200).json({
+            msg: "Has cancelado la solicitud",
+            trabajoActualizado
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Error al actualizar el estado del trabajo" });
+    }
+}
+
 
 export {
     crearTrabajo,
@@ -175,5 +200,6 @@ export {
     obtenerTrabajosPorCliente,
     agendarTrabajo,
     rechazarTrabajo,
+    cancelarTrabajo,
     obtenerTrabajosDeUnProveedor
 }
