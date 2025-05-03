@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 
 const crearOferta = async (req, res) => {
     const {precioPorDia, precioPorHora, servicio, descripcion} = req.body;
+    const usuario = await ModuloUsuario.findById(req.usuarioBDD._id);
+
+    if (usuario.monedasOfertas === 0) {
+        return res.status(403).json({ msg: "Has alcanzado el límite de ofertas gratuitas. Considera cambiar a un plan premium." });
+    }
+
     try{
         if (Object.values(req.body).includes("")) return res. status (400).json({msg: "Lo sentimos, debe llenar todo los campos."})
 
@@ -15,6 +21,9 @@ const crearOferta = async (req, res) => {
         })
 
         await nuevaOferta.save()
+
+        usuario.monedasOfertas -= 1;
+        await usuario.save();
 
         res.status(200).json({msg: "Oferta creada correctamente.", oferta: nuevaOferta})
 

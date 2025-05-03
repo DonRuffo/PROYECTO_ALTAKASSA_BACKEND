@@ -9,8 +9,8 @@ const routeUsuario = Router()
 routeUsuario.post('/registroUser', validacionRegistroUsuario() ,registroUsuario)
 routeUsuario.get('/confirmarUser/:token', confirmarEmail)
 routeUsuario.post('/loginUser', loginUsuario)
-routeUsuario.post('/recuperarPassUser', validacionRecuperarPassUsuario() ,RecuperarContrasenia)
-routeUsuario.post('/restablecerPassUser/:token', ConfirmarRecuperarContrasenia)
+routeUsuario.post('/recuperarPassUser', RecuperarContrasenia)
+routeUsuario.post('/restablecerPassUser/:token', validacionRecuperarPassUsuario(), ConfirmarRecuperarContrasenia)
 
 //privadas
 routeUsuario.get('/perfilUser', verificarAutenticacion, Perfil)

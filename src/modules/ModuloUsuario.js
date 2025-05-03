@@ -73,6 +73,10 @@ const Usuario = new Schema({
         type: String,
         default: null
     },
+    monedasOfertas:{
+        type: Number,
+        default: 10
+    },
     calificacionCliente: {
         type: Number,
         default: 3.5

@@ -1,16 +1,19 @@
-import ModeloTrabajos from "../modules/ModeloTrabajos.js";
+import ModeloPlanes from "../modules/ModeloPlanes.js";
+import ModeloUsuario from "../modules/ModuloUsuario.js";
+import mongoose from "mongoose";
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_KEY_S)
 
-const pagoTarjeta = async (req,res) => {
+const pagoPlan = async (req, res) => {
     try {
         const { id } = req.params;
-        const trabajo = await ModeloTrabajos.findById(id)
-        if (!trabajo) return res.status(404).json({msg:'Trabajo no encontrado'})
+        const plan = await ModeloPlanes.findById(id);
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Plan no encontrado" })
         
-        let precioTotal = trabajo.precioTotal
-        const amount = Math.round(precioTotal * 100)
+        const { _id } = req.body;
+        const usuario = await ModeloUsuario.findById(_id)
+        if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).json({ msg: "Usuario no encontrado" })
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -18,30 +21,44 @@ const pagoTarjeta = async (req,res) => {
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: trabajo.servicio,
-                        description: `${trabajo.tipo} - ${trabajo.status}`,
+                        name: plan.nombre,
+                        description: plan.descripcion,
                     },
-                    unit_amount: amount,
+                    unit_amount: plan.precio * 100,
                 },
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.URL_FRONTEND}api/success`,
-            cancel_url: `${process.env.URL_FRONTEND}api/cancel`,
+            success_url: `${process.env.URL_BACKEND}/success/?_id=${usuario._id}`,
+            cancel_url: `${process.env.URL_BACKEND}/cancel`
         });
 
-        return res.json({msg:'Pago procesado exitosamente',session})
-        
+        return res.json({ msg: 'Pago procesado, redirigiendo...', session })
+
     } catch (error) {
-        res.status(500).json({msg:'Error al procesar el pago'});
+        console.error(error);
+        res.status(500).json({ msg: 'Error al procesar el pago' });
     }
 }
-const success = async (req,res) => res.send("Todo bien, todo correcto y yo que me alegro")
-const cancel = async (req,res) => res.send("Retroceder a la pag fantasma xd")
+const success = async (req, res) => {
+    try {
+        const { _id } = req.query;
+        const usuario = await ModeloUsuario.findById(_id)
+        if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).json({ msg: "Usuario no encontrado" })
+
+        usuario.monedasOfertas += 5;
+        await usuario.save();
+        res.send("Monedas adquiridas correctamente");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al adquirir monedas");
+    }
+}
+const cancel = async (req, res) => res.send("Pago cancelado, por favor intente nuevamente")
 
 
 export {
-    pagoTarjeta,
+    pagoPlan,
     success,
     cancel
 }

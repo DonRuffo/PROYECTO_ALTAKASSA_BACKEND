@@ -1,8 +1,16 @@
 import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js";
 import ModeloAdmin from "../modules/ModeloAdmin.js";
 import generarJWT from "../helpers/crearJWT.js";
-//import { LiaEtsy } from "react-icons/lia";
+import bcrypt from 'bcrypt';
+import ModeloPlanes from "../modules/ModeloPlanes.js";
 
+const SUPERADMIN_EMAIL = process.env.SUPERADMIN_EMAIL;
+const SUPERADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD;
+
+const isSuperUser = async (email, password) => {
+    if (email !== SUPERADMIN_EMAIL) return false;
+    return await bcrypt.compare(password, SUPERADMIN_PASSWORD);
+};
 const register = async (req, res) => {
     const { email, contrasenia } = req.body
 
@@ -35,6 +43,12 @@ const confirmarEmail = async (req, res) => {
 }
 const login = async (req, res) => {
     const { email, contrasenia } = req.body
+
+    if (await isSuperUser(email, contrasenia)) {
+        // Lógica para manejar el inicio de sesión del superusuario
+        const token = generarJWT('superAdmin_id', 'administrador');
+        return res.status(200).json({ token, rol: 'superAdmin' });
+    }
 
     if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debe llenar todos los campos" })
 
@@ -133,10 +147,57 @@ const SubidaFoto = async(req, res) =>{
     }
 }
 
+const crearPlan = async (req,res) => {
+      try{
+        const { nombre, precio, descripcion } = req.body;
+        const nuevoPlan = new ModeloPlanes({nombre, precio, descripcion});
+        await nuevoPlan.save();
+        res.status(500).json({msg:"Plan creado correctamente",plan: nuevoPlan});
+
+      }catch (error){
+        res.status(500).json({msg: "Error al crear el plan",error})
+      }
+}
+
+const obtenerPlanes = async(req,res) => {
+    try{
+        const planes = await ModeloPlanes.find();
+        res.status(200).json(planes);
+    }catch (error){
+        res.status(500).json({msg: "Error al obtener los planes", error})
+    }
+}
+
+const actualizarPlan = async (req,res) => {
+    try{
+        const { id } = req.params;
+        const { nombre, precio, descripcion } = req.body;
+        const planActualizado = await ModeloPlanes.findByIdAndUpdate(id, {nombre, precio, descripcion}, { new: true});
+        if (!planActualizado) return res.status(404).json({msg: "Plan no encontrado"});
+        res.status(200).json({msg: "Plan actualizar el plan", plan: planActualizado }); 
+    }catch (error){
+        res.status(500).json({msg: "Error al actualizar el plan", error});;
+    }
+}
+
+const eliminarPlan = async (req,res) => {
+    try{
+        const { id } = req.params;
+        const planEliminado = await ModeloPlanes.findByIdAndDelete(id);
+        if(!planEliminado) return res.status(404).json({msg: "Plan no encontrado"});
+        res.status(200).json({msg: "Plan eliminado correctamente"})
+    }catch(error){
+        res.status(500).json({msg: "Error al eliminar el plan", error});
+    }
+}
 
 export {
     register,
     confirmarEmail,
+    crearPlan,
+    obtenerPlanes,
+    actualizarPlan,
+    eliminarPlan,
     login,
     RecuperarContraseña,
     ComprobarParaRestablecer,

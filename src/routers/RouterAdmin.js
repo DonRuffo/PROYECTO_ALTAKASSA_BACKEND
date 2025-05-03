@@ -1,13 +1,18 @@
 import { Router } from "express";
-import { confirmarEmail, 
+import {
+    register,
     login, 
-    register, 
     RecuperarContraseña, 
     ComprobarParaRestablecer, 
+    actualizarPlan,
+    confirmarEmail,
     ActualizarPerfilAdministrador,
     ActualizarContrasenia, 
     Perfil,
-    SubidaFoto
+    SubidaFoto,
+    crearPlan,
+    obtenerPlanes,
+    eliminarPlan,
 } from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
@@ -26,5 +31,9 @@ router.get('/perfil-admin', verificarAutenticacion , Perfil)
 router.put('/actualizar-perfil', verificarAutenticacion, ActualizarPerfilAdministrador)
 router.put('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrasenia)
 router.post('/fotoAdmin', verificarAutenticacion, SubidaFoto)
+router.post('/crearPlan', verificarAutenticacion ,crearPlan)
+router.get('/obtenerPlanes', verificarAutenticacion, obtenerPlanes)
+router.put('/actualizarPlan/:id', verificarAutenticacion, actualizarPlan)
+router.delete('/eliminarPlan/:id', verificarAutenticacion, eliminarPlan)
 
 export default router
