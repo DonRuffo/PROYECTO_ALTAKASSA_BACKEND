@@ -58,7 +58,7 @@ const AdministradorSchema = new Schema({
     timestamps:true
 })
 
-//Encriptación
+//Encriptación para administrador
 
 AdministradorSchema.methods.EncriptarContraAdmin = async function(password){
     const nivelSal = await bcrypt.genSalt(10)
