@@ -9,7 +9,6 @@ import routerPagos from './routers/RouterPagos.js';
 import routeCloud from './routers/RouterCloud.js';
 import routeSug from './routers/RouterSugerencias.js';
 import routeUsuario from './routers/RouteUsuario.js';
-
 const app = express()
 const corsOptions = {
     origin: ['http://localhost:5173', 'https://altakassa.vercel.app'], 

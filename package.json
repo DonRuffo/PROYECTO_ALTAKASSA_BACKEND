@@ -25,6 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.7",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "path": "^0.12.7",
     "stripe": "^17.7.0",
