@@ -83,11 +83,11 @@ const Usuario = new Schema({
     },
     calificacionCliente: {
         type: Number,
-        default: 3.5
+        default: 5
     },
     calificacionProveedor: {
         type: Number,
-        default: 3.5
+        default: 5
     },
     ofertas: [
         {
