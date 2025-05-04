@@ -6,10 +6,10 @@ import ModuloUsuario from "../modules/ModuloUsuario.js";
 
 const crearTrabajo = async (req, res) => {
     try {
-        const {fecha, hasta, desde} = req.body
+        const { fecha, hasta, desde } = req.body
         const oferta = await Ofertas.findById(req.body.oferta)
-        if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Debe seleccionar todos los campos"})
-        if (!oferta) return res.status(404).json({msg: "Oferta no encontrada"})
+        if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Debe seleccionar todos los campos" })
+        if (!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
         const trabajo = new Trabajos(req.body)
 
         const fechaDesde = new Date(`${fecha}T${desde}:00`)
@@ -22,7 +22,7 @@ const crearTrabajo = async (req, res) => {
         trabajo.hasta = fechaHasta
         await trabajo.save()
 
-        res.status(200).json({msg: "Trabajo creado con exito"})
+        res.status(200).json({ msg: "Trabajo creado con exito" })
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Error al crear el trabajo" })
@@ -46,11 +46,11 @@ const obtenerTrabajo = async (req, res) => {
     }
 }
 
-const obtenerTrabajosDeUnProveedor =async (req, res)=>{
+const obtenerTrabajosDeUnProveedor = async (req, res) => {
     const { id } = req.params
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" })
-        const trabajo = await ModeloTrabajos.find({proveedor:id})
+        const trabajo = await ModeloTrabajos.find({ proveedor: id })
             .populate('cliente', 'nombre apellido email')
             .populate('proveedor', 'nombre apellido email')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
@@ -63,9 +63,9 @@ const obtenerTrabajosDeUnProveedor =async (req, res)=>{
     }
 }
 
-const obtenerTrabajosPorProveedor = async (req, res) =>{
+const obtenerTrabajosPorProveedor = async (req, res) => {
     try {
-        const trabajos = await ModeloTrabajos.find({proveedor:req.usuarioBDD._id})
+        const trabajos = await ModeloTrabajos.find({ proveedor: req.usuarioBDD._id })
             .populate('cliente', 'nombre apellido email f_perfil')
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
@@ -78,9 +78,9 @@ const obtenerTrabajosPorProveedor = async (req, res) =>{
     }
 }
 
-const obtenerTrabajosPorCliente = async (req, res) =>{
+const obtenerTrabajosPorCliente = async (req, res) => {
     try {
-        const trabajos = await ModeloTrabajos.find({cliente:req.usuarioBDD._id})
+        const trabajos = await ModeloTrabajos.find({ cliente: req.usuarioBDD._id })
             .populate('cliente', 'nombre apellido email f_perfil')
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
@@ -136,8 +136,8 @@ const eliminarTrabajo = async (req, res) => {
 const agendarTrabajo = async (req, res) => {
     const { id } = req.params;
     const usuario = await ModuloUsuario.findById(req.usuarioBDD._id)
-    if(usuario.monedasTrabajos === 0){
-        return res.status(403).json({msg: "Ya no tienes créditos, actualiza tu plan"})
+    if (usuario.monedasTrabajos === 0) {
+        return res.status(403).json({ msg: "Ya no tienes créditos, actualiza tu plan" })
     }
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
@@ -146,7 +146,7 @@ const agendarTrabajo = async (req, res) => {
         if (trabajo.status !== "En espera") return res.status(400).json({ msg: "El trabajo ya no puede ser agendar o ya fue agendado" });
 
         trabajo.status = "Agendado";
-        usuario.monedasTrabajos -=1;
+        usuario.monedasTrabajos -= 1;
         const trabajoActualizado = await trabajo.save();
         await usuario.save()
         res.status(200).json({
@@ -179,13 +179,17 @@ const rechazarTrabajo = async (req, res) => {
     }
 }
 
-const cancelarTrabajo = async (req, res) =>{
+const cancelarTrabajo = async (req, res) => {
     const { id } = req.params;
+    const proveedor = req.query.proveedor
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
         const trabajo = await ModeloTrabajos.findById(id);
+        const usuario = await ModuloUsuario.findById(proveedor)
+
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
         trabajo.status = "Cancelado";
+        usuario.monedasTrabajos +=1;
         const trabajoActualizado = await trabajo.save();
         res.status(200).json({
             msg: "Has cancelado el trabajo",
