@@ -36,12 +36,14 @@ const TrabajosSchema = new Schema({
         require:true
     },
     desde:{
-        type: String,
-        default:'08:00'
+        type: Date,
+        require:true,
+        trim:true
     },
     hasta:{
-        type: String,
-        default: '17:00'
+        type: Date,
+        require:true,
+        trim:true
     },
     precioTotal : {
         type:Number,

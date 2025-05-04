@@ -6,13 +6,20 @@ import ModuloUsuario from "../modules/ModuloUsuario.js";
 
 const crearTrabajo = async (req, res) => {
     try {
+        const {fecha, hasta, desde} = req.body
         const oferta = await Ofertas.findById(req.body.oferta)
         if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Debe seleccionar todos los campos"})
         if (!oferta) return res.status(404).json({msg: "Oferta no encontrada"})
         const trabajo = new Trabajos(req.body)
+
+        const fechaDesde = new Date(`${fecha}T${desde}:00`)
+        const fechaHasta = new Date(`${fecha}T${hasta}:00`)
+
         trabajo.cliente = req.usuarioBDD._id
         trabajo.proveedor = oferta.proveedor
         trabajo.oferta = oferta._id
+        trabajo.desde = fechaDesde
+        trabajo.hasta = fechaHasta
         await trabajo.save()
 
         res.status(200).json({msg: "Trabajo creado con exito"})
