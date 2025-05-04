@@ -108,8 +108,9 @@ const misOfertas = async (req,res) => {
 
 const listarOfertas = async (req,res) => {
     try {
-        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email f_perfil');
-        res.status(200).json(ofertas);
+        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos');
+        const ofertasFiltradas = ofertas.filter((of) => of.proveedor.monedasTrabajos !== 0)
+        res.status(200).json(ofertasFiltradas);
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: "Error al obtener las ofertas del proveedor" });
