@@ -1,9 +1,10 @@
 import ModeloOfertas from "../modules/ModeloOfertas.js";
 import mongoose from "mongoose";
+import ModuloUsuario from "../modules/ModuloUsuario.js";
 
 const crearOferta = async (req, res) => {
     const {precioPorDia, precioPorHora, servicio, descripcion} = req.body;
-    const usuario = await ModuloUsuario.findById(req.usuarioBDD._id);
+    const usuario = await ModuloUsuario.findById(req.usuarioBDD._id)
 
     if (usuario.cantidadOfertas === 0) {
         return res.status(403).json({ msg: "Has alcanzado el límite de ofertas." });
