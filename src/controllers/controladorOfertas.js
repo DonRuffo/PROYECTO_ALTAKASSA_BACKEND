@@ -78,7 +78,7 @@ const actualizarOferta = async (req, res) => {
 
 const eliminarOferta = async (req, res) => {
     const { id } = req.params
-
+    const io = req.app.get('io')
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "ID no valido" })
         const oferta = await ModeloOfertas.findById(id)
@@ -90,7 +90,7 @@ const eliminarOferta = async (req, res) => {
 
         await oferta.deleteOne();
         usuario.cantidadOfertas += 1;
-
+        io.emit('Oferta-eliminada', {id})
         await usuario.save()
         res.status(200).json({ msg: 'Oferta eliminada correctamente' })
 
