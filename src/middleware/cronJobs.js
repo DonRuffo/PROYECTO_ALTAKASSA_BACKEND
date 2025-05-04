@@ -1,5 +1,5 @@
 import cron from 'node-cron'
-import ModeloTrabajos from '../modules/ModeloTrabajos'
+import ModeloTrabajos from '../modules/ModeloTrabajos.js'
 
 
 cron.schedule('*/10 * * * *', async () =>{
