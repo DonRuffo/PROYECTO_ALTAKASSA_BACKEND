@@ -5,6 +5,7 @@ import ModuloUsuario from "../modules/ModuloUsuario.js";
 const crearOferta = async (req, res) => {
     const { precioPorDia, precioPorHora, servicio, descripcion } = req.body;
     const usuario = await ModuloUsuario.findById(req.usuarioBDD._id)
+    const io = req.app.get('io')
 
     if (usuario.cantidadOfertas === 0) {
         return res.status(403).json({ msg: "Has alcanzado el límite de ofertas." });
@@ -20,7 +21,7 @@ const crearOferta = async (req, res) => {
             servicio,
             descripcion
         })
-
+        io.emit('Crear-oferta', {nuevaOferta})
         await nuevaOferta.save()
         res.status(200).json({ msg: "Oferta creada correctamente.", oferta: nuevaOferta })
 
@@ -50,24 +51,24 @@ const verOferta = async (req, res) => {
 
 const actualizarOferta = async (req, res) => {
     const { id } = req.params
-
+    const io = req.app.get('io')
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "ID no válido" })
 
-        const oferta = await ModeloOfertas.findById(id)
+        const ofertaActual = await ModeloOfertas.findById(id)
 
-        if (!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
+        if (!ofertaActual) return res.status(404).json({ msg: "Oferta no encontrada" })
 
-        if (oferta.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(403).json({ msg: "No tiene permisos para actulaizar esta oferta" })
+        if (ofertaActual.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(403).json({ msg: "No tiene permisos para actulaizar esta oferta" })
 
         const { precioPorDia, precioPorHora, servicio, descripcion } = req.body
-        oferta.precioPorDia = precioPorDia || oferta.precioPorDia
-        oferta.precioPorHora = precioPorHora || oferta.precioPorHora
-        oferta.servicio = servicio || oferta.servicio
-        oferta.descripcion = descripcion || oferta.descripcion
-
-        await oferta.save()
-        res.status(200).json({ msg: "Oferta actualizada correctamente", oferta })
+        ofertaActual.precioPorDia = precioPorDia || ofertaActual.precioPorDia
+        ofertaActual.precioPorHora = precioPorHora || ofertaActual.precioPorHora
+        ofertaActual.servicio = servicio || ofertaActual.servicio
+        ofertaActual.descripcion = descripcion || ofertaActual.descripcion
+        io.emit('Actualizar-oferta', {id, ofertaActual})
+        await ofertaActual.save()
+        res.status(200).json({ msg: "Oferta actualizada correctamente", ofertaActual })
 
 
     } catch (error) {
