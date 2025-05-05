@@ -8,6 +8,8 @@ const crearTrabajo = async (req, res) => {
     try {
         const { fecha, hasta, desde } = req.body
         const oferta = await Ofertas.findById(req.body.oferta)
+        const io = req.app.get('io')
+
         if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Debe seleccionar todos los campos" })
         if (!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
         const trabajo = new Trabajos(req.body)
@@ -22,6 +24,12 @@ const crearTrabajo = async (req, res) => {
         trabajo.hasta = fechaHasta
         await trabajo.save()
 
+        const trabajoActual = await ModeloTrabajos.findById(trabajo._id)
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
+
+        io.emit('Trabajo-creado', { trabajoActual })
         res.status(200).json({ msg: "Trabajo creado con exito" })
     } catch (error) {
         console.log(error)
@@ -70,6 +78,8 @@ const obtenerTrabajosPorProveedor = async (req, res) => {
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajos) return res.status(404).json({ msg: "No tienes solicitudes de trabajo" })
+
+
         res.status(200).json(trabajos)
 
     } catch (error) {
@@ -85,6 +95,7 @@ const obtenerTrabajosPorCliente = async (req, res) => {
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajos) return res.status(404).json({ msg: "No tienes solicitudes de trabajo" })
+
         res.status(200).json(trabajos)
 
     } catch (error) {
@@ -95,9 +106,13 @@ const obtenerTrabajosPorCliente = async (req, res) => {
 
 const actualizarTrabajo = async (req, res) => {
     const { id } = req.params
+    const io = req.app.get('io')
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" })
         const trabajo = await ModeloTrabajos.findById(id)
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
         trabajo.oferta = req.body.oferta || trabajo.oferta
         trabajo.fecha = req.body.fecha || trabajo.fecha
@@ -109,6 +124,8 @@ const actualizarTrabajo = async (req, res) => {
         trabajo.calificacionCliente = req.body.calificacionCliente || trabajo.calificacionCliente
         trabajo.calificacionProveedor = req.body.calificacionProveedor || trabajo.calificacionProveedor
         const trabajoActualizado = await trabajo.save()
+
+        io.emit('Trabajo-actualizado', { id, trabajoActualizado })
         res.status(200).json({
             msg: "Trabajo actualizado correctamente",
             trabajoActualizado
@@ -121,10 +138,16 @@ const actualizarTrabajo = async (req, res) => {
 
 const eliminarTrabajo = async (req, res) => {
     const { id } = req.params
+    const io = req.app.get('io')
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" })
         const trabajo = await ModeloTrabajos.findById(id)
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
+
+        io.emit('Trabajo-eliminado', { id, trabajo })
         await trabajo.deleteOne()
         res.status(200).json({ msg: "Trabajo eliminado correctamente" })
     } catch (error) {
@@ -140,14 +163,20 @@ const agendarTrabajo = async (req, res) => {
         return res.status(403).json({ msg: "Ya no tienes créditos, actualiza tu plan" })
     }
     try {
+        const io = req.app.get('io')
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
-        const trabajo = await ModeloTrabajos.findById(id);
+        const trabajo = await ModeloTrabajos.findById(id)
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
         if (trabajo.status !== "En espera") return res.status(400).json({ msg: "El trabajo ya no puede ser agendar o ya fue agendado" });
 
         trabajo.status = "Agendado";
         usuario.monedasTrabajos -= 1;
         const trabajoActualizado = await trabajo.save();
+
+        io.emit('Trabajo-agendado', { id, trabajoActualizado })
         await usuario.save()
         res.status(200).json({
             msg: "Has aceptado la solicitud",
@@ -162,13 +191,18 @@ const agendarTrabajo = async (req, res) => {
 const rechazarTrabajo = async (req, res) => {
     const { id } = req.params;
     try {
+        const io = req.app.get('io')
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
-        const trabajo = await ModeloTrabajos.findById(id);
+        const trabajo = await ModeloTrabajos.findById(id)
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
         if (trabajo.status === "Completado" || trabajo.status === "Rechazado") return res.status(400).json({ msg: "El trabajo ya no puede ser rechazado" });
 
         trabajo.status = "Rechazado";
         const trabajoActualizado = await trabajo.save();
+        io.emit('Trabajo-rechazado', { id, trabajoActualizado })
         res.status(200).json({
             msg: "Has rechazado la solicitud",
             trabajoActualizado
@@ -183,14 +217,19 @@ const cancelarTrabajo = async (req, res) => {
     const { id } = req.params;
     const proveedor = req.query.proveedor
     try {
+        const io = req.app.get('io')
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
-        const trabajo = await ModeloTrabajos.findById(id);
+        const trabajo = await ModeloTrabajos.findById(id)
+            .populate('cliente', 'nombre apellido email f_perfil')
+            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
         const usuario = await ModuloUsuario.findById(proveedor)
 
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
         trabajo.status = "Cancelado";
-        usuario.monedasTrabajos +=1;
+        usuario.monedasTrabajos += 1;
         const trabajoActualizado = await trabajo.save();
+        io.emit('Trabajo-cancelado', { id, trabajoActualizado })
         res.status(200).json({
             msg: "Has cancelado el trabajo",
             trabajoActualizado

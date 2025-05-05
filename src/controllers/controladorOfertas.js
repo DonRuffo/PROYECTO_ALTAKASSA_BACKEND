@@ -84,14 +84,14 @@ const eliminarOferta = async (req, res) => {
     const io = req.app.get('io')
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "ID no valido" })
-        const oferta = await ModeloOfertas.findById(id)
+        const oferta = await ModeloOfertas.findById(id).populate('proveedor', 'nombre apellido email f_perfil')
         const usuario = await ModuloUsuario.findById(req.usuarioBDD._id)
 
         if (!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
 
-        if (oferta.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(404).json({ msg: "No tienes permisos para eliminar esta oferta" })
-        
-        io.emit('Oferta-eliminada', { id })
+        if (oferta.proveedor._id.toString() !== req.usuarioBDD._id.toString()) return res.status(404).json({ msg: "No tienes permisos para eliminar esta oferta" })
+
+        io.emit('Oferta-eliminada', { id, oferta })
         await oferta.deleteOne();
         usuario.cantidadOfertas += 1;
 
