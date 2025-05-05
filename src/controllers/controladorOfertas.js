@@ -27,7 +27,7 @@ const crearOferta = async (req, res) => {
 
         usuario.cantidadOfertas -= 1
         await usuario.save()
-        const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('nombre apellido email f_perfil monedasTrabajos')
+        const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor' ,'nombre apellido email f_perfil monedasTrabajos')
         io.emit('Crear-oferta', {ofertaPop})
 
     } catch (error) {
