@@ -21,14 +21,14 @@ const crearOferta = async (req, res) => {
             servicio,
             descripcion
         })
-        
+
         await nuevaOferta.save()
         res.status(200).json({ msg: "Oferta creada correctamente.", oferta: nuevaOferta })
 
         usuario.cantidadOfertas -= 1
         await usuario.save()
-        const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor' ,'nombre apellido email f_perfil monedasTrabajos')
-        io.emit('Crear-oferta', {ofertaPop})
+        const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos')
+        io.emit('Crear-oferta', { ofertaPop })
 
     } catch (error) {
         console.log(error)
@@ -68,7 +68,7 @@ const actualizarOferta = async (req, res) => {
         ofertaActual.precioPorHora = precioPorHora || ofertaActual.precioPorHora
         ofertaActual.servicio = servicio || ofertaActual.servicio
         ofertaActual.descripcion = descripcion || ofertaActual.descripcion
-        io.emit('Actualizar-oferta', {id, ofertaActual})
+        io.emit('Actualizar-oferta', { id, ofertaActual })
         await ofertaActual.save()
         res.status(200).json({ msg: "Oferta actualizada correctamente", ofertaActual })
 
@@ -90,10 +90,11 @@ const eliminarOferta = async (req, res) => {
         if (!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
 
         if (oferta.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(404).json({ msg: "No tienes permisos para eliminar esta oferta" })
-
+        
+        io.emit('Oferta-eliminada', { id })
         await oferta.deleteOne();
         usuario.cantidadOfertas += 1;
-        io.emit('Oferta-eliminada', {id})
+
         await usuario.save()
         res.status(200).json({ msg: 'Oferta eliminada correctamente' })
 
