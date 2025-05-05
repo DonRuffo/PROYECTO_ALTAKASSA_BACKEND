@@ -55,11 +55,11 @@ const actualizarOferta = async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "ID no válido" })
 
-        const ofertaActual = await ModeloOfertas.findById(id)
+        const ofertaActual = await ModeloOfertas.findById(id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos');
 
         if (!ofertaActual) return res.status(404).json({ msg: "Oferta no encontrada" })
 
-        if (ofertaActual.proveedor.toString() !== req.usuarioBDD._id.toString()) return res.status(403).json({ msg: "No tiene permisos para actulaizar esta oferta" })
+        if (ofertaActual.proveedor._id.toString() !== req.usuarioBDD._id.toString()) return res.status(403).json({ msg: "No tiene permisos para actulaizar esta oferta" })
 
         const { precioPorDia, precioPorHora, servicio, descripcion } = req.body
         ofertaActual.precioPorDia = precioPorDia || ofertaActual.precioPorDia
