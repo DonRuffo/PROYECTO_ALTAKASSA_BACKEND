@@ -231,6 +231,7 @@ const cancelarTrabajo = async (req, res) => {
         trabajo.status = "Cancelado";
         usuario.monedasTrabajos += 1;
         const trabajoActualizado = await trabajo.save();
+        await usuario.save()
         io.emit('Trabajo-cancelado', { id, trabajoActualizado })
         res.status(200).json({
             msg: "Has cancelado el trabajo",
