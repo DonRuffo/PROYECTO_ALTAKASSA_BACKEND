@@ -219,10 +219,12 @@ const cancelarTrabajo = async (req, res) => {
     try {
         const io = req.app.get('io')
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
+        if (!mongoose.Types.ObjectId.isValid(proveedor)) return res.status(404).json({ msg: "Proveedor no encontrado" });
         const trabajo = await ModeloTrabajos.findById(id)
             .populate('cliente', 'nombre apellido email f_perfil')
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
+        
         const usuario = await ModuloUsuario.findById(proveedor)
 
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });
