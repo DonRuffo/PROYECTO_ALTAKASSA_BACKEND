@@ -16,3 +16,13 @@ cron.schedule('*/10 * * * *', async () =>{
     );
     console.log(`[CRON] ${trabajosAgendados.modifiedCount} trabajos actualizados`)
 })
+
+cron.schedule('0 0 * * 1', async () =>{
+    const ahora = new Date()
+
+    const trabajosCancelados = await ModeloTrabajos.deleteMany({
+        status: { $in: ['Cancelado', 'Completado'] }
+    })
+
+    console.log(`[CRON] ${trabajosCancelados.deletedCount} trabajos eliminados`)
+})
