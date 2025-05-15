@@ -24,11 +24,6 @@ const validacionRegistroUsuario = () => {
         .notEmpty().withMessage('El email es obligatorio')
         .isEmail().withMessage('Debe ser un email válido'),
 
-        check('telefono')
-        .trim()
-        .notEmpty().withMessage('El teléfono es obligatorio')
-        .isMobilePhone().withMessage('Debe ser un número de teléfono válido'),
-
         check('contrasenia')
         .trim()
         .notEmpty().withMessage('La contraseña es obligatoria')
