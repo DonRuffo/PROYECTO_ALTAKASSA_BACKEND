@@ -23,12 +23,6 @@ const Usuario = new Schema({
         require: true,
         unique: true
     },
-    telefono: {
-        type: String,
-        require: true,
-        trim: true,
-        unique: true
-    },
     direccion: {
         type: String,
         trim: true,
