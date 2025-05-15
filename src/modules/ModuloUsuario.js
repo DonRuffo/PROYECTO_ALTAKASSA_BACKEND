@@ -1,5 +1,10 @@
-import mongoose ,{ Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt'
+import dotenv from 'dotenv';
+import crypto from 'crypto';
+
+
+dotenv.config()
 
 const Usuario = new Schema({
     nombre: {
@@ -29,9 +34,9 @@ const Usuario = new Schema({
         trim: true,
         require: true
     },
-    rol:{
-        type:String,
-        default:'usuario'
+    rol: {
+        type: String,
+        default: 'usuario'
     },
     contrasenia: {
         type: String,
@@ -50,36 +55,28 @@ const Usuario = new Schema({
         default: true
     },
     ubicacionActual: {
-        longitud: {
-            type: Number,
-            default: null
-        },
-        latitud: {
-            type: Number,
-            default: null
-        }
+        type: String,
+        default: null
     },
     ubicacionTrabajo: {
-        longitud: {
-            type: Number,
-            default: null
-        },
-        latitud: {
-            type: Number,
-            default: null
-        }
+        type: String,
+        default: null
+    },
+    ivTra: {
+        type: String,
+        default: null
     },
     f_perfil: {
         type: String,
         default: null
     },
-    monedasTrabajos:{
+    monedasTrabajos: {
         type: Number,
         default: 2
     },
-    cantidadOfertas:{
-        type:Number,
-        default:7
+    cantidadOfertas: {
+        type: Number,
+        default: 7
     },
     calificacionCliente: {
         type: Number,
@@ -96,22 +93,40 @@ const Usuario = new Schema({
         }
     ]
 },
-    {timestamps:true}
+    { timestamps: true }
 )
-Usuario.methods.EncriptarContrasenia = async function(password){
+Usuario.methods.EncriptarContrasenia = async function (password) {
     const nivelSal = await bcrypt.genSalt(10)
     const ContraEncriptada = await bcrypt.hash(password, nivelSal)
     return ContraEncriptada
 }
 
-Usuario.methods.CompararPasswordUsuario = async function(password){
+Usuario.methods.CompararPasswordUsuario = async function (password) {
     const comparacion = await bcrypt.compare(password, this.contrasenia)
     return comparacion
 }
 
-Usuario.methods.GenerarToken = function(){
-    const tokenSesion=this.token = Math.random().toString(36).slice(2)
+Usuario.methods.GenerarToken = function () {
+    const tokenSesion = this.token = Math.random().toString(36).slice(2)
     return tokenSesion
+}
+Usuario.methods.EncriptarUbicacion = async function (ubi) {
+    const claveSecreta = process.env.CLSECRET
+    const iv = crypto.randomBytes(16)
+    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(claveSecreta), iv)
+    let encriptado = cipher.update(JSON.stringify(ubi), 'utf8', 'hex')
+    encriptado += cipher.final('hex')
+    return {
+        iv: iv.toString('hex'),
+        datos: encriptado
+    };
+}
+
+Usuario.methods.DesencriptarUbi = async function (ubi, ivHex) {
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(claveSecreta), Buffer.from(ivHex, 'hex'));
+    let desencriptado = decipher.update(ubi, 'hex', 'utf8');
+    desencriptado += decipher.final('utf8');
+    return JSON.parse(desencriptado);
 }
 
 export default model('Usuario', Usuario)

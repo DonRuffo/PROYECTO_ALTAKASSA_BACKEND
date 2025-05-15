@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ActualizarContraseniaUsuario, ActualizarPerfilUsuario, AgregarUbicacionActual, AgregarUbicacionTrabajo, confirmarEmail, ConfirmarRecuperarContrasenia, detalleUsuario, loginUsuario, obtenerUbicacion, Perfil, RecuperarContrasenia, registroUsuario, SubidaFoto, verificarFoto, verificarUbicacionActual, verificarUbicacionTrabajo } from "../controllers/ControladorUsuario.js";
+import { ActualizarContraseniaUsuario, ActualizarPerfilUsuario, AgregarUbicacionActual, AgregarUbicacionTrabajo, confirmarEmail, ConfirmarRecuperarContrasenia, detalleUsuario, loginUsuario, obtenerUbicacion, obtenerUbicacionTrabajo, Perfil, RecuperarContrasenia, registroUsuario, SubidaFoto, verificarFoto, verificarUbicacionActual, verificarUbicacionTrabajo } from "../controllers/ControladorUsuario.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import { listarOfertas } from "../controllers/controladorOfertas.js";
 import { validacionActualizarPassUsuario, validacionActualizarUsuario, validacionRecuperarPassUsuario, validacionRegistroUsuario } from "../validation/validationUsuario.js";
@@ -25,5 +25,6 @@ routeUsuario.get('/verFotoUser', verificarAutenticacion, verificarFoto)
 routeUsuario.get('/verUbiActualUser', verificarAutenticacion, verificarUbicacionActual)
 routeUsuario.get('/verUbiTrabajoUser', verificarAutenticacion, verificarUbicacionTrabajo)
 routeUsuario.get('/ubiUser', verificarAutenticacion, obtenerUbicacion)
+routeUsuario.get('/ubiUserTra', verificarAutenticacion, obtenerUbicacionTrabajo)
 
 export default routeUsuario
