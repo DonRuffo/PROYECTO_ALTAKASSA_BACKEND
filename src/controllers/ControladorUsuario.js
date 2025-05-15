@@ -230,10 +230,11 @@ const obtenerUbicacion = async (req, res) => {
     try {
         const { email } = req.usuarioBDD
         const iv = req.query.iv
+        if(!iv) return res.status(404).json({msg:"No llega el iv"})
         const usuario = await ModuloUsuario.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
         const ubiActual = usuario.ubicacionActual
-        if (!ubiActual || !iv) return res.status(404).json({ msg: 'No tiene ubicación almacenada' })
+        if (!ubiActual) return res.status(404).json({ msg: 'No tiene ubicación almacenada' })
         const desencriptado = await usuario.DesencriptarUbi(ubiActual, iv)
         res.status(200).json({ ubiActual, desencriptado })
     } catch (error) {
@@ -248,7 +249,7 @@ const obtenerUbicacionTrabajo = async (req, res) => {
         if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
         const iv = usuario.ivTra
         const ubiTra = usuario.ubicacionTrabajo
-        const desencriptado = usuario.DesencriptarUbi(ubiTra, iv)
+        const desencriptado = await usuario.DesencriptarUbi(ubiTra, iv)
         res.status(200).json({ desencriptado })
     } catch (error) {
         res.status(404).json({msg:"Error al obtener la ubicación"})

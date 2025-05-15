@@ -107,7 +107,8 @@ Usuario.methods.GenerarToken = function () {
 Usuario.methods.EncriptarUbicacion = async function (ubi) {
     const claveSecreta = process.env.CLSECRET
     const iv = crypto.randomBytes(16)
-    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(claveSecreta), iv)
+    const key = crypto.createHash('sha256').update(claveSecreta).digest();
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
     let encriptado = cipher.update(JSON.stringify(ubi), 'utf8', 'hex')
     encriptado += cipher.final('hex')
     return {
@@ -117,7 +118,9 @@ Usuario.methods.EncriptarUbicacion = async function (ubi) {
 }
 
 Usuario.methods.DesencriptarUbi = async function (ubi, ivHex) {
-    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(claveSecreta), Buffer.from(ivHex, 'hex'));
+    const claveSecreta = process.env.CLSECRET
+    const key = crypto.createHash('sha256').update(claveSecreta).digest();
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), Buffer.from(ivHex, 'hex'));
     let desencriptado = decipher.update(ubi, 'hex', 'utf8');
     desencriptado += decipher.final('utf8');
     return JSON.parse(desencriptado);
