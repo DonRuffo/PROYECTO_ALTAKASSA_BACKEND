@@ -9,18 +9,61 @@ import routerPagos from './routers/RouterPagos.js';
 import routeCloud from './routers/RouterCloud.js';
 import routeSug from './routers/RouterSugerencias.js';
 import routeUsuario from './routers/RouteUsuario.js';
+import helmet from 'helmet';
+import sanitize from 'mongo-sanitize'
+import rateLimit from 'express-rate-limit'
 const app = express()
+
+dotenv.config()
+
+app.use(express.json())
+
+app.use(rateLimit({
+  windowMs:15*60*1000,
+  max:100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Demasiadas solicitudes. Inténtalo más tarde.'
+}))
+
+app.use(morgan('dev'))
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://altakassa.vercel.app'], 
+    origin: ['http://localhost:5173', 'https://altakassa.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'method'],
 };
 app.use(cors(corsOptions))
 
-dotenv.config()
-app.use(express.json())
+//seguridad
+app.use(helmet())
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        imgSrc: ["'self'", 'data:']
+    }
+}))
+app.use(helmet.frameguard({action:'deny'}))
+app.use(helmet.hidePoweredBy())
+app.use(
+  helmet.hsts({
+    maxAge: 60 * 60 * 24 * 365 * 2, // 2 años
+    includeSubDomains: true,
+    preload: true
+  })
+);
+app.use(helmet.originAgentCluster());
+app.disable('x-powered-by'); 
 
-app.use(morgan('dev'))
+//sanitizar
+app.use((req, res, next) => {
+  req.body = sanitize(req.body);
+  req.query = sanitize(req.query);
+  req.params = sanitize(req.params);
+  next();
+});
+
 
 app.set('port', process.env.PORT || 3000)
 

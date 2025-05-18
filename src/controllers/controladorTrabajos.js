@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Ofertas from '../modules/ModeloOfertas.js'
 import Trabajos from '../modules/ModeloTrabajos.js'
 import ModuloUsuario from "../modules/ModuloUsuario.js";
+import { DateTime } from "luxon";
 
 const crearTrabajo = async (req, res) => {
     try {
@@ -14,8 +15,8 @@ const crearTrabajo = async (req, res) => {
         if (!oferta) return res.status(404).json({ msg: "Oferta no encontrada" })
         const trabajo = new Trabajos(req.body)
 
-        const fechaDesde = new Date(`${fecha}T${desde}:00`)
-        const fechaHasta = new Date(`${fecha}T${hasta}:00`)
+        const fechaDesde = DateTime.fromISO(`${fecha}T${desde}`, { zone: 'America/Guayaquil' }).toUTC().toJSDate()
+        const fechaHasta = DateTime.fromISO(`${fecha}T${hasta}`, { zone: 'America/Guayaquil' }).toUTC().toJSDate()
 
         trabajo.cliente = req.usuarioBDD._id
         trabajo.proveedor = oferta.proveedor
@@ -224,7 +225,7 @@ const cancelarTrabajo = async (req, res) => {
             .populate('cliente', 'nombre apellido email f_perfil')
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
-        
+
         const usuario = await ModuloUsuario.findById(proveedor)
 
         if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" });

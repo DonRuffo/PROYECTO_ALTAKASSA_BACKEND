@@ -1,9 +1,10 @@
 import cron from 'node-cron'
 import ModeloTrabajos from '../modules/ModeloTrabajos.js'
+import {DateTime} from 'luxon'
 
 
 cron.schedule('*/10 * * * *', async () =>{
-    const ahora = new Date()
+    const ahora = DateTime.utc().toJSDate()
 
     const trabajosAgendados = await ModeloTrabajos.updateMany(
         {
