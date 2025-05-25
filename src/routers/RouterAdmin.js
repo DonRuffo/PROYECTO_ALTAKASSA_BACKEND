@@ -13,6 +13,8 @@ import {
     crearPlan,
     obtenerPlanes,
     eliminarPlan,
+    listarUsuarios,
+    eliminarUsuario,
 } from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
@@ -35,5 +37,7 @@ router.post('/crearPlan', verificarAutenticacion ,crearPlan)
 router.get('/obtenerPlanes', verificarAutenticacion, obtenerPlanes)
 router.put('/actualizarPlan/:id', verificarAutenticacion, actualizarPlan)
 router.delete('/eliminarPlan/:id', verificarAutenticacion, eliminarPlan)
+router.get('/listarUsuarios', verificarAutenticacion, listarUsuarios)
+router.delete('/eliminarUser', verificarAutenticacion, eliminarUsuario)
 
 export default router

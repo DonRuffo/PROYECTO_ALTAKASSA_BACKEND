@@ -26,13 +26,15 @@ app.use(rateLimit({
   message: 'Demasiadas solicitudes. Inténtalo más tarde.'
 }))
 
-app.use(morgan('dev'))
 const corsOptions = {
     origin: ['http://localhost:5173', 'https://altakassa.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'method'],
 };
 app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
+
+app.use(morgan('dev'))
 
 //seguridad
 app.use(helmet())
@@ -41,10 +43,11 @@ app.use(helmet.contentSecurityPolicy({
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-        imgSrc: ["'self'", 'data:']
+        imgSrc: ["'self'", 'data:'],
+        connectSrc : ["'self'", 'https://altakassa1503003.up.railway.app']
     }
 }))
-app.use(helmet.frameguard({action:'deny'}))
+app.use(helmet.frameguard({action:'deny'})) 
 app.use(helmet.hidePoweredBy())
 app.use(
   helmet.hsts({

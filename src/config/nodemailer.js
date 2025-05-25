@@ -33,7 +33,6 @@ const sendMailToAdmin = async (userMail, token) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Correo enviado: ' + info.response)
   } catch (error) {
     console.error("Error en envío de correo", error)
   }
@@ -58,7 +57,6 @@ const sendMailToAdminRestore = async (userMail, token) => {
     };
 
     const infoRes = await transporter.sendMail(mailOptions);
-    console.log("Correo enviado: " + infoRes.response)
   } catch (error) {
     console.error("Error al enviar el correo", error)
   }

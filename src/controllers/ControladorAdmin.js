@@ -3,6 +3,7 @@ import ModeloAdmin from "../modules/ModeloAdmin.js";
 import ModeloPlanes from "../modules/ModeloPlanes.js";
 import generarJWT from "../helpers/crearJWT.js";
 import bcrypt from 'bcrypt';
+import ModuloUsuario from "../modules/ModuloUsuario.js";
 
 const SUPERADMIN_EMAIL = process.env.SUPERADMIN_EMAIL;
 const SUPERADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD;
@@ -190,6 +191,29 @@ const eliminarPlan = async (req,res) => {
     }
 }
 
+
+const listarUsuarios = async(req, res) => {
+    try {
+        const usuarios = await ModuloUsuario.find().select('-contrasenia -ubicacionActual -ubicacionTrabajo -ivTra')
+        res.status(200).json(usuarios)
+    } catch (error) {
+        res.status(500).json({msg:"Error al intentar obtener los usuarios", error})
+    }
+}
+
+
+const eliminarUsuario = async(req, res) => {
+    const {id} = req.params
+    try {
+        const usuario = await ModuloUsuario.findByIdAndDelete(id)
+        if (!usuario) return res.status(404).json({msg:"No se encuentra el usuario"})
+        res.status(200).json({msg:"Usuario eliminado"})        
+    } catch (error) {
+        console.log("Error al eliminar al usuario", error)
+    }
+}
+
+
 export {
     register,
     confirmarEmail,
@@ -203,5 +227,7 @@ export {
     ActualizarPerfilAdministrador,
     ActualizarContrasenia,
     Perfil,
-    SubidaFoto
+    SubidaFoto,
+    listarUsuarios,
+    eliminarUsuario
 }
