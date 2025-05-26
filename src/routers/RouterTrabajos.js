@@ -16,6 +16,5 @@ routerTrabajos.put('/agendarTrabajo/:id',verificarAutenticacion, agendarTrabajo)
 routerTrabajos.put('/rechazarTrabajo/:id',verificarAutenticacion, rechazarTrabajo)
 routerTrabajos.put('/cancelarTrabajo/:id', verificarAutenticacion, cancelarTrabajo)
 
-//ojala valga
 
 export default routerTrabajos

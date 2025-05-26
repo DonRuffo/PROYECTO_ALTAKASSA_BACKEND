@@ -92,17 +92,19 @@ const RecuperarContrasenia = async (req, res) => {
     const UsuarioBDD = await ModuloUsuario.findOne({ email })
     if (!UsuarioBDD) return res.status(404).json({ msg: "La cuenta no existe" })
     UsuarioBDD.token = UsuarioBDD.GenerarToken()
-    sendMailToAdminRestore(email, UsuarioBDD.token)
     await UsuarioBDD.save()
+
+    await sendMailToAdminRestore(email, UsuarioBDD.token)
+
     res.status(200).json({ msg: "Se ha enviado a su correo un enlace para restablecer la contraseña" })
 }
 
 const ConfirmarRecuperarContrasenia = async (req, res) => {
     const { token } = req.params
-    const { email, contrasenia } = req.body
+    const { contrasenia } = req.body
     if (!(token)) return res.status(404).json({ msg: "Token no identificado" })
-    if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Por favor, ingrese sus nuevas credenciales" })
-    const UsuarioBDD = await ModuloUsuario.findOne({ email })
+    if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Ingrese su nueva contraseña" })
+    const UsuarioBDD = await ModuloUsuario.findOne({ token })
     if (!UsuarioBDD) return res.status(404).json({ msg: "La cuenta no existe, correo inexistente" })
     if (UsuarioBDD?.token !== token) return res.status(404).json({ msg: "Token no autorizado" })
     const nuevaContrasenia = await UsuarioBDD.EncriptarContrasenia(contrasenia)
@@ -110,7 +112,7 @@ const ConfirmarRecuperarContrasenia = async (req, res) => {
     UsuarioBDD.token = null
     UsuarioBDD.status = true
     await UsuarioBDD.save()
-    res.status(200).json({ msg: "Contraseña restablecida con éxito" })
+    res.status(200).json({ msg: "Contraseña restablecida" })
 }
 
 
@@ -230,7 +232,7 @@ const obtenerUbicacion = async (req, res) => {
     try {
         const { email } = req.usuarioBDD
         const iv = req.query.iv
-        if(!iv) return res.status(404).json({msg:"No llega el iv"})
+        if (!iv) return res.status(404).json({ msg: "No llega el iv" })
         const usuario = await ModuloUsuario.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
         const ubiActual = usuario.ubicacionActual
@@ -252,7 +254,7 @@ const obtenerUbicacionTrabajo = async (req, res) => {
         const desencriptado = await usuario.DesencriptarUbi(ubiTra, iv)
         res.status(200).json({ desencriptado })
     } catch (error) {
-        res.status(404).json({msg:"Error al obtener la ubicación"})
+        res.status(404).json({ msg: "Error al obtener la ubicación" })
     }
 
 }
