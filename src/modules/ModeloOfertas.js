@@ -21,7 +21,8 @@ const OfertasSchema = new Schema({
     descripcion:{
         type:String,
         require:true
-    }
+    },
+    servicios:[String]
 })
 
 export default model('Ofertas', OfertasSchema)

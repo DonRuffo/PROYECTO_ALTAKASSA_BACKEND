@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import ModuloUsuario from "../modules/ModuloUsuario.js";
 
 const crearOferta = async (req, res) => {
-    const { precioPorDia, precioPorHora, servicio, descripcion } = req.body;
+    const { precioPorDia, precioPorHora, servicio, descripcion, servicios } = req.body;
     const usuario = await ModuloUsuario.findById(req.usuarioBDD._id)
     const io = req.app.get('io')
 
@@ -19,7 +19,8 @@ const crearOferta = async (req, res) => {
             precioPorDia,
             precioPorHora,
             servicio,
-            descripcion
+            descripcion,
+            servicios
         })
 
         await nuevaOferta.save()
@@ -63,11 +64,12 @@ const actualizarOferta = async (req, res) => {
 
         if (ofertaActual.proveedor._id.toString() !== req.usuarioBDD._id.toString()) return res.status(403).json({ msg: "No tiene permisos para actulaizar esta oferta" })
 
-        const { precioPorDia, precioPorHora, servicio, descripcion } = req.body
+        const { precioPorDia, precioPorHora, servicio, descripcion, servicios } = req.body
         ofertaActual.precioPorDia = precioPorDia || ofertaActual.precioPorDia
         ofertaActual.precioPorHora = precioPorHora || ofertaActual.precioPorHora
         ofertaActual.servicio = servicio || ofertaActual.servicio
         ofertaActual.descripcion = descripcion || ofertaActual.descripcion
+        ofertaActual.servicios = servicios || ofertaActual.servicios
         io.emit('Actualizar-oferta', { id, ofertaActual })
         await ofertaActual.save()
         res.status(200).json({ msg: "Oferta actualizada correctamente", ofertaActual })

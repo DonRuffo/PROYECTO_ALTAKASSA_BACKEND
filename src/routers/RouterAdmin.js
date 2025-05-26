@@ -38,6 +38,6 @@ router.get('/obtenerPlanes', verificarAutenticacion, obtenerPlanes)
 router.put('/actualizarPlan/:id', verificarAutenticacion, actualizarPlan)
 router.delete('/eliminarPlan/:id', verificarAutenticacion, eliminarPlan)
 router.get('/listarUsuarios', verificarAutenticacion, listarUsuarios)
-router.delete('/eliminarUser', verificarAutenticacion, eliminarUsuario)
+router.delete('/eliminarUser/:id', verificarAutenticacion, eliminarUsuario)
 
 export default router

@@ -70,7 +70,7 @@ const Usuario = new Schema({
     },
     cantidadOfertas: {
         type: Number,
-        default: 7
+        default: 5
     },
     calificacionCliente: {
         type: Number,
