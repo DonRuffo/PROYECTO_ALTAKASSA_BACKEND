@@ -3,9 +3,7 @@ import bcrypt from 'bcrypt'
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 
-
 dotenv.config()
-
 const Usuario = new Schema({
     nombre: {
         type: String,

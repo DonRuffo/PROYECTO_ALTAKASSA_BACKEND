@@ -44,7 +44,7 @@ app.use(helmet.contentSecurityPolicy({
         styleSrc: ["'self'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:'],
-        connectSrc : ["'self'", 'https://altakassa1503003.up.railway.app']
+        connectSrc : ["'self'", 'https://altakassa1503003.up.railway.app', 'https://altakassa.vercel.app']
     }
 }))
 app.use(helmet.frameguard({action:'deny'})) 
