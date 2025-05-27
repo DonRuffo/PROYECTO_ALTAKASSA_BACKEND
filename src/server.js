@@ -18,6 +18,20 @@ dotenv.config()
 
 app.use(express.json())
 
+const corsOptions = {
+    origin: ['http://localhost:5173', 'https://altakassa.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'method', 'Origin', 'Accept'],
+};
+app.use(cors(corsOptions))
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://altakassa.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(204).send();
+});
+
+
 app.use(rateLimit({
   windowMs:15*60*1000,
   max:100,
@@ -25,14 +39,6 @@ app.use(rateLimit({
   legacyHeaders: false,
   message: 'Demasiadas solicitudes. Inténtalo más tarde.'
 }))
-
-const corsOptions = {
-    origin: ['http://localhost:5173', 'https://altakassa.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'method', 'Origin', 'Accept'],
-};
-app.use(cors(corsOptions))
-app.options('*', cors(corsOptions))
 
 app.use(morgan('dev'))
 
