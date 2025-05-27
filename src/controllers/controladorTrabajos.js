@@ -31,6 +31,7 @@ const crearTrabajo = async (req, res) => {
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
 
         io.emit('Trabajo-creado', { trabajoActual })
+        io.emit('Nueva-solicitud', { trabajoActual })
         res.status(200).json({ msg: "Trabajo creado con exito" })
     } catch (error) {
         console.log(error)
