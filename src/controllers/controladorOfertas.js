@@ -30,6 +30,7 @@ const crearOferta = async (req, res) => {
         await usuario.save()
         const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos')
         io.emit('Crear-oferta', { ofertaPop })
+    
 
     } catch (error) {
         console.log(error)

@@ -28,8 +28,8 @@ app.use(rateLimit({
 
 const corsOptions = {
     origin: ['http://localhost:5173', 'https://altakassa.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'method'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'method', 'Origin', 'Accept'],
 };
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions))
