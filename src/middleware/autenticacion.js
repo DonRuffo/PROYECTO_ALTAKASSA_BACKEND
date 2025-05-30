@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import Administrador from '../modules/ModeloAdmin.js'
 import Usuario from '../modules/ModuloUsuario.js'
 
 const verificarAutenticacion = async (req, res, next) => {
@@ -9,7 +8,7 @@ const verificarAutenticacion = async (req, res, next) => {
     try {
         const { id, rol } = jwt.verify(authorization.split(' ')[1], process.env.JWT_SECRET)
         if (rol === "administrador") {
-            req.AdminBDD = await Administrador.findById(id).lean().select("-contrasenia")
+            req.AdminBDD = await Usuario.findById(id).lean().select("-contrasenia")
             next()
         }
         else if (rol === "usuario") {

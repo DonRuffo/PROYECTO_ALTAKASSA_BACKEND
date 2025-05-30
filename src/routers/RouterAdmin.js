@@ -15,6 +15,7 @@ import {
     eliminarPlan,
     listarUsuarios,
     eliminarUsuario,
+    obtenerPlan,
 } from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
@@ -35,6 +36,7 @@ router.put('/actualizar-contrasenia', verificarAutenticacion, ActualizarContrase
 router.post('/fotoAdmin', verificarAutenticacion, SubidaFoto)
 router.post('/crearPlan', verificarAutenticacion ,crearPlan)
 router.get('/obtenerPlanes', verificarAutenticacion, obtenerPlanes)
+router.get('/obtenerPlan/:id', verificarAutenticacion, obtenerPlan)
 router.put('/actualizarPlan/:id', verificarAutenticacion, actualizarPlan)
 router.delete('/eliminarPlan/:id', verificarAutenticacion, eliminarPlan)
 router.get('/listarUsuarios', verificarAutenticacion, listarUsuarios)

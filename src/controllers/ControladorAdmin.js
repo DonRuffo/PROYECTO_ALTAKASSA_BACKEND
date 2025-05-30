@@ -5,13 +5,6 @@ import generarJWT from "../helpers/crearJWT.js";
 import bcrypt from 'bcrypt';
 import ModuloUsuario from "../modules/ModuloUsuario.js";
 
-const SUPERADMIN_EMAIL = process.env.SUPERADMIN_EMAIL;
-const SUPERADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD;
-
-const isSuperUser = async (email, password) => {
-    if (email !== SUPERADMIN_EMAIL) return false;
-    return await bcrypt.compare(password, SUPERADMIN_PASSWORD);
-};
 const register = async (req, res) => {
     const { email, contrasenia } = req.body
 
@@ -27,7 +20,7 @@ const register = async (req, res) => {
     await nuevoAdmin.save()
     await sendMailToAdmin(email, token)
 
-    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol:nuevoAdmin.rol })
+    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol: nuevoAdmin.rol })
 }
 const confirmarEmail = async (req, res) => {
     const { token } = req.params
@@ -44,30 +37,22 @@ const confirmarEmail = async (req, res) => {
 }
 const login = async (req, res) => {
     const { email, contrasenia } = req.body
+    try {
+        if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debe llenar todos los campos" })
 
-    if (await isSuperUser(email, contrasenia)) { 
-        const token = generarJWT('superAdmin_id', 'administrador');
-        return res.status(200).json({ token, rol: 'superAdmin' });
+        const userAd = await ModuloUsuario.findOne({ email })
+        const comparacion = await userAd.CompararPasswordUsuario(contrasenia);
+
+        if(comparacion) {
+            const token = generarJWT(userAd._id, 'administrador');
+            const {_id} = userAd
+            res.status(200).json({ token, _id, rol: 'administrador' });
+        }else{
+            res.status(404).json({ msg: "Credenciales incorrectas" })
+        }
+    } catch (error) {
+        console.error(error)
     }
-
-    if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debe llenar todos los campos" })
-
-    const AdminBDD = await ModeloAdmin.findOne({ email })
-    if (AdminBDD?.confirmEmail == false) return res.status(400).json({ msg: "Lo sentimos, debe verificar su cuenta" })
-    if (!AdminBDD) return res.status(403).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" })
-
-    const verificarPassword = await AdminBDD.CompararContra(contrasenia)
-    if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
-
-    const token = generarJWT(AdminBDD._id, "administrador")
-
-    const {_id} = AdminBDD
-    
-    res.status(200).json({
-        token,
-        _id,
-        rol:'administrador'
-    })
 }
 
 const RecuperarContraseña = async (req, res) => {
@@ -109,21 +94,21 @@ const ActualizarPerfilAdministrador = async (req, res) => {
     res.status(200).json({ msg: "Cambios guardados", AdminBDD })
 }
 
-const ActualizarContrasenia = async(req, res)=>{
-    const {email} = req.AdminBDD
-    const {contrasenia, nuevaContrasenia} = req.body
+const ActualizarContrasenia = async (req, res) => {
+    const { email } = req.AdminBDD
+    const { contrasenia, nuevaContrasenia } = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
-    const AdminBDD = await ModeloAdmin.findOne({email})
+    const AdminBDD = await ModeloAdmin.findOne({ email })
     if (!AdminBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
     const Verificacion = await AdminBDD.CompararContra(contrasenia)
-    if(!Verificacion) return res.status(404).json({msg:"La contraseña actual no es correcta"})
+    if (!Verificacion) return res.status(404).json({ msg: "La contraseña actual no es correcta" })
     const EncriptarContra = await AdminBDD.EncriptarContraAdmin(nuevaContrasenia)
     AdminBDD.contrasenia = EncriptarContra
     await AdminBDD.save()
-    res.status(200).json({msg:"Contraseña actualizada"})
+    res.status(200).json({ msg: "Contraseña actualizada" })
 }
 
-const Perfil = (req, res) =>{
+const Perfil = (req, res) => {
     delete req.AdminBDD.token
     delete req.AdminBDD.confirmEmail
     delete req.AdminBDD.createdAt
@@ -132,82 +117,95 @@ const Perfil = (req, res) =>{
     res.status(200).json(req.AdminBDD)
 }
 
-const SubidaFoto = async(req, res) =>{
+const SubidaFoto = async (req, res) => {
     try {
-        const {email} = req.AdminBDD
-        const usuario = await ModeloAdmin.findOne({email})
-        if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
-        const {secure_url} = req.body
-        if(!secure_url) return res.status(404).json({msg:'No existe una url de Cloud'})
-        usuario.f_perfil=secure_url
+        const { email } = req.AdminBDD
+        const usuario = await ModeloAdmin.findOne({ email })
+        if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
+        const { secure_url } = req.body
+        if (!secure_url) return res.status(404).json({ msg: 'No existe una url de Cloud' })
+        usuario.f_perfil = secure_url
         await usuario.save()
-        res.status(200).json({msg:'Imagen guardada'})
+        res.status(200).json({ msg: 'Imagen guardada' })
     } catch (error) {
         console.log('Hubo un error al subir la imagen', error)
     }
 }
 
-const crearPlan = async (req,res) => {
-      try{
-        const { nombre, precio, descripcion } = req.body;
-        const nuevoPlan = new ModeloPlanes({nombre, precio, descripcion});
-        await nuevoPlan.save();
-        res.status(500).json({msg:"Plan creado correctamente",plan: nuevoPlan});
+const crearPlan = async (req, res) => {
+    try {
+        const { nombre, precio, creditos, descripcion } = req.body;
 
-      }catch (error){
-        res.status(500).json({msg: "Error al crear el plan",error})
-      }
+        if(Object.values(req.body).includes('')) return res.status(404).json({msg:"Debe llenar todos los campos"})
+
+        const nuevoPlan = new ModeloPlanes({ nombre, precio, creditos, descripcion });
+        await nuevoPlan.save();
+        res.status(200).json({ msg: "Plan creado correctamente", plan: nuevoPlan });
+
+    } catch (error) {
+        res.status(500).json({ msg: "Error al crear el plan", error })
+    }
 }
 
-const obtenerPlanes = async(req,res) => {
-    try{
+const obtenerPlanes = async (req, res) => {
+    try {
         const planes = await ModeloPlanes.find();
         res.status(200).json(planes);
-    }catch (error){
-        res.status(500).json({msg: "Error al obtener los planes", error})
+    } catch (error) {
+        res.status(500).json({ msg: "Error al obtener los planes", error })
     }
 }
 
-const actualizarPlan = async (req,res) => {
-    try{
+const obtenerPlan = async (req, res) =>{
+    const {id} = req.params
+    if(!id) return res.status(404).json({msg:'No existe el ID'})
+    
+    const plan = await ModeloPlanes.findById(id)
+    if(!plan) return res.status(404).json({msg:'El plan no existe'})
+    
+    res.status(200).json(plan)
+}
+
+const actualizarPlan = async (req, res) => {
+    try {
         const { id } = req.params;
-        const { nombre, precio, descripcion } = req.body;
-        const planActualizado = await ModeloPlanes.findByIdAndUpdate(id, {nombre, precio, descripcion}, { new: true});
-        if (!planActualizado) return res.status(404).json({msg: "Plan no encontrado"});
-        res.status(200).json({msg: "Plan actualizar el plan", plan: planActualizado }); 
-    }catch (error){
-        res.status(500).json({msg: "Error al actualizar el plan", error});;
+        const { nombre, precio, creditos, descripcion } = req.body;
+        const planActualizado = await ModeloPlanes.findByIdAndUpdate(id, { nombre, precio, creditos, descripcion }, { new: true });
+        if (!planActualizado) return res.status(404).json({ msg: "Plan no encontrado" });
+        res.status(200).json({ msg: "Plan actualizado", plan: planActualizado });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al actualizar el plan", error });;
     }
 }
 
-const eliminarPlan = async (req,res) => {
-    try{
+const eliminarPlan = async (req, res) => {
+    try {
         const { id } = req.params;
         const planEliminado = await ModeloPlanes.findByIdAndDelete(id);
-        if(!planEliminado) return res.status(404).json({msg: "Plan no encontrado"});
-        res.status(200).json({msg: "Plan eliminado correctamente"})
-    }catch(error){
-        res.status(500).json({msg: "Error al eliminar el plan", error});
+        if (!planEliminado) return res.status(404).json({ msg: "Plan no encontrado" });
+        res.status(200).json({ msg: "Plan eliminado correctamente" })
+    } catch (error) {
+        res.status(500).json({ msg: "Error al eliminar el plan", error });
     }
 }
 
 
-const listarUsuarios = async(req, res) => {
+const listarUsuarios = async (req, res) => {
     try {
         const usuarios = await ModuloUsuario.find().select('-contrasenia -ubicacionActual -ubicacionTrabajo -ivTra')
         res.status(200).json(usuarios)
     } catch (error) {
-        res.status(500).json({msg:"Error al intentar obtener los usuarios", error})
+        res.status(500).json({ msg: "Error al intentar obtener los usuarios", error })
     }
 }
 
 
-const eliminarUsuario = async(req, res) => {
-    const {id} = req.params
+const eliminarUsuario = async (req, res) => {
+    const { id } = req.params
     try {
         const usuario = await ModuloUsuario.findByIdAndDelete(id)
-        if (!usuario) return res.status(404).json({msg:"No se encuentra el usuario"})
-        res.status(200).json({msg:"Usuario eliminado"})        
+        if (!usuario) return res.status(404).json({ msg: "No se encuentra el usuario" })
+        res.status(200).json({ msg: "Usuario eliminado" })
     } catch (error) {
         console.log("Error al eliminar al usuario", error)
     }
@@ -229,5 +227,6 @@ export {
     Perfil,
     SubidaFoto,
     listarUsuarios,
-    eliminarUsuario
+    eliminarUsuario,
+    obtenerPlan
 }

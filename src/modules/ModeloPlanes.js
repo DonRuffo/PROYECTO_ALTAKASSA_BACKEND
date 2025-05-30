@@ -10,11 +10,15 @@ const PlanesSchema = new Schema({
         type: Number,
         required: true
     },
+    creditos: {
+        type: Number,
+        required: true
+    },
     descripcion: {
         type: String,
         trim: true
     },
-    
+
 })
 
-export default model('Planes',PlanesSchema)
+export default model('Planes', PlanesSchema)
