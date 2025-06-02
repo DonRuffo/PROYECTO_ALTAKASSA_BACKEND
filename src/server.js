@@ -12,6 +12,7 @@ import routeUsuario from './routers/RouteUsuario.js';
 import helmet from 'helmet';
 import sanitize from 'mongo-sanitize'
 import rateLimit from 'express-rate-limit'
+import routeCategorias from './routers/RouterCats.js';
 const app = express()
 
 dotenv.config()
@@ -34,7 +35,7 @@ app.options('*', (req, res) => {
 
 app.use(rateLimit({
   windowMs:15*60*1000,
-  max:100,
+  max:125,
   standardHeaders: true,
   legacyHeaders: false,
   message: 'Demasiadas solicitudes. Inténtalo más tarde.'
@@ -83,6 +84,7 @@ app.use('/api', routerPagos)
 app.use('/api', routeCloud)
 app.use('/api', routeSug)
 app.use('/api', routeUsuario)
+app.use('/api', routeCategorias)
 
 app.get('/', (req, res) => { res.send("Servidor levantado") })
 

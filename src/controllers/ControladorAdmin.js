@@ -2,8 +2,8 @@ import { sendMailToAdmin, sendMailToAdminRestore } from "../config/nodemailer.js
 import ModeloAdmin from "../modules/ModeloAdmin.js";
 import ModeloPlanes from "../modules/ModeloPlanes.js";
 import generarJWT from "../helpers/crearJWT.js";
-import bcrypt from 'bcrypt';
 import ModuloUsuario from "../modules/ModuloUsuario.js";
+import ModeloOfertas from "../modules/ModeloOfertas.js";
 
 const register = async (req, res) => {
     const { email, contrasenia } = req.body
@@ -211,6 +211,18 @@ const eliminarUsuario = async (req, res) => {
     }
 }
 
+const detallesDelUsuario = async(req, res) =>{
+    const {id} = req.params
+    if(!id) return res.status(404).json({msg:'No existe el id'})
+
+    const usuario = await ModuloUsuario.findById(id)
+    if(!usuario) return res.status(404).json({msg:'El usuario no existe'})
+    
+    const ofertas = await ModeloOfertas.find({proveedor:id})
+
+    res.status(200).json({usuario, ofertas})
+}
+
 
 export {
     register,
@@ -228,5 +240,6 @@ export {
     SubidaFoto,
     listarUsuarios,
     eliminarUsuario,
-    obtenerPlan
+    obtenerPlan,
+    detallesDelUsuario
 }

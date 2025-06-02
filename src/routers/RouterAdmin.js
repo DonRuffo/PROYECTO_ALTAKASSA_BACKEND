@@ -16,6 +16,7 @@ import {
     listarUsuarios,
     eliminarUsuario,
     obtenerPlan,
+    detallesDelUsuario,
 } from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
@@ -41,5 +42,6 @@ router.put('/actualizarPlan/:id', verificarAutenticacion, actualizarPlan)
 router.delete('/eliminarPlan/:id', verificarAutenticacion, eliminarPlan)
 router.get('/listarUsuarios', verificarAutenticacion, listarUsuarios)
 router.delete('/eliminarUser/:id', verificarAutenticacion, eliminarUsuario)
+router.get('/detalleUsers/:id', verificarAutenticacion, detallesDelUsuario)
 
 export default router

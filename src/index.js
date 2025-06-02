@@ -21,7 +21,6 @@ io.on('connection', (socket) => {
 
 app.set('io', io)
 
-
 server.listen(app.get('port'), () => {
     console.log(`Servidor levantado en puerto ${app.get('port')}`)
 })
