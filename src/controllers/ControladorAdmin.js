@@ -40,8 +40,8 @@ const login = async (req, res) => {
     try {
         if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debe llenar todos los campos" })
 
-        const userAd = await ModuloAdmin.findOne({ email })
-        const comparacion = await userAd.CompararPasswordUsuario(contrasenia);
+        const userAd = await ModeloAdmin.findOne({ email })
+        const comparacion = await userAd.CompararContra(contrasenia);
 
         if(comparacion) {
             const token = generarJWT(userAd._id, 'administrador');
