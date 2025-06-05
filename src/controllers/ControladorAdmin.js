@@ -167,11 +167,14 @@ const obtenerPlan = async (req, res) =>{
 }
 
 const actualizarPlan = async (req, res) => {
+    const io = req.app.get('io')
     try {
         const { id } = req.params;
         const { nombre, precio, creditos, descripcion } = req.body;
         const planActualizado = await ModeloPlanes.findByIdAndUpdate(id, { nombre, precio, creditos, descripcion }, { new: true });
         if (!planActualizado) return res.status(404).json({ msg: "Plan no encontrado" });
+
+        io.emit('Plan actualizado', {id, planActualizado})
         res.status(200).json({ msg: "Plan actualizado", plan: planActualizado });
     } catch (error) {
         res.status(500).json({ msg: "Error al actualizar el plan", error });;
@@ -179,10 +182,12 @@ const actualizarPlan = async (req, res) => {
 }
 
 const eliminarPlan = async (req, res) => {
+    const io = req.app.get('io')
     try {
         const { id } = req.params;
         const planEliminado = await ModeloPlanes.findByIdAndDelete(id);
         if (!planEliminado) return res.status(404).json({ msg: "Plan no encontrado" });
+        io.emit('Plan eliminado', {id})
         res.status(200).json({ msg: "Plan eliminado correctamente" })
     } catch (error) {
         res.status(500).json({ msg: "Error al eliminar el plan", error });
@@ -202,9 +207,11 @@ const listarUsuarios = async (req, res) => {
 
 const eliminarUsuario = async (req, res) => {
     const { id } = req.params
+    const io = req.app.get('io')
     try {
         const usuario = await ModuloUsuario.findByIdAndDelete(id)
         if (!usuario) return res.status(404).json({ msg: "No se encuentra el usuario" })
+        io.emit('Usuario eliminado', {id})
         res.status(200).json({ msg: "Usuario eliminado" })
     } catch (error) {
         console.log("Error al eliminar al usuario", error)
