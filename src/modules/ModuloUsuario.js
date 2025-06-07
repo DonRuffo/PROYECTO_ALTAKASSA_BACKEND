@@ -62,6 +62,10 @@ const Usuario = new Schema({
         type: String,
         default: null
     },
+    publicId:{
+        type:String,
+        default:null
+    },
     monedasTrabajos: {
         type: Number,
         default: 2

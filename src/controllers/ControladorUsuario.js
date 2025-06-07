@@ -189,6 +189,20 @@ const SubidaFoto = async (req, res) => {
     }
 }
 
+const ObtenerPublicId = async (req, res) => {
+    try {
+        const {id} = req.params
+        if(!id) return res.status(404).json({msg:"Id no encontrado"})
+        const usuario = await ModuloUsuario.findById(id)
+        if(!usuario) return res.status(404).json({msg:"Usuario no encontrado"})
+
+        const publicId = usuario.publicId
+        res.status(200).json({publicId})
+    } catch (error) {
+        res.status(500).json({error})
+    }
+}
+
 const verificarFoto = async (req, res) => {
     try {
         const { email } = req.usuarioBDD
@@ -276,5 +290,6 @@ export {
     verificarUbicacionActual,
     verificarUbicacionTrabajo,
     obtenerUbicacion,
-    obtenerUbicacionTrabajo
+    obtenerUbicacionTrabajo,
+    ObtenerPublicId
 }
