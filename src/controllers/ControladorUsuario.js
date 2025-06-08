@@ -179,11 +179,12 @@ const SubidaFoto = async (req, res) => {
         const { email } = req.usuarioBDD
         const usuario = await ModuloUsuario.findOne({ email })
         if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' })
-        const { secure_url } = req.body
-        if (!secure_url) return res.status(404).json({ msg: 'No existe una url de Cloud' })
+        const { secure_url, public_id } = req.body
+        if (!secure_url || !public_id) return res.status(404).json({ msg: 'No existe una url de Cloud' })
         usuario.f_perfil = secure_url
+        usuario.publicId = public_id
         await usuario.save()
-        res.status(200).json({ msg: 'Imagen guardada' })
+        res.status(200).json({ msg: 'Foto subida' })
     } catch (error) {
         console.log('Hubo un error al subir la imagen', error)
     }

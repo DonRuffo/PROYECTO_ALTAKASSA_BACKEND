@@ -134,12 +134,15 @@ const SubidaFoto = async (req, res) => {
 
 const crearPlan = async (req, res) => {
     try {
+        const io = req.app.get('io')
         const { nombre, precio, creditos, descripcion } = req.body;
 
         if(Object.values(req.body).includes('')) return res.status(404).json({msg:"Debe llenar todos los campos"})
 
         const nuevoPlan = new ModeloPlanes({ nombre, precio, creditos, descripcion });
         await nuevoPlan.save();
+
+        io.emit('Nuevo Plan', {nuevoPlan})
         res.status(200).json({ msg: "Plan creado correctamente", plan: nuevoPlan });
 
     } catch (error) {
@@ -194,7 +197,6 @@ const eliminarPlan = async (req, res) => {
     }
 }
 
-
 const listarUsuarios = async (req, res) => {
     try {
         const usuarios = await ModuloUsuario.find().select('-contrasenia -ubicacionActual -ubicacionTrabajo -ivTra')
@@ -204,13 +206,15 @@ const listarUsuarios = async (req, res) => {
     }
 }
 
-
 const eliminarUsuario = async (req, res) => {
     const { id } = req.params
     const io = req.app.get('io')
     try {
         const usuario = await ModuloUsuario.findByIdAndDelete(id)
         if (!usuario) return res.status(404).json({ msg: "No se encuentra el usuario" })
+        await ModeloOfertas.deleteMany({proveedor:id})
+        await ModeloTrabajos.deleteMany({proveedor:id})
+
         io.emit('Usuario eliminado', {id})
         res.status(200).json({ msg: "Usuario eliminado" })
     } catch (error) {
