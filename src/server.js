@@ -9,6 +9,7 @@ import routerPagos from './routers/RouterPagos.js';
 import routeCloud from './routers/RouterCloud.js';
 import routeSug from './routers/RouterSugerencias.js';
 import routeUsuario from './routers/RouteUsuario.js';
+import routerChat from './routers/RouterMensajes.js';
 import helmet from 'helmet';
 import sanitize from 'mongo-sanitize'
 import rateLimit from 'express-rate-limit'
@@ -85,6 +86,7 @@ app.use('/api', routeCloud)
 app.use('/api', routeSug)
 app.use('/api', routeUsuario)
 app.use('/api', routeCategorias)
+app.use('/api', routerChat)
 
 app.get('/', (req, res) => { res.send("Servidor levantado") })
 

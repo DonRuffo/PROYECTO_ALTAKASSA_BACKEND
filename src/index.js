@@ -3,6 +3,7 @@ import { Server } from 'socket.io'
 import app from "./server.js";
 import connection from "./database.js";
 import './middleware/cronJobs.js'
+import { guardarMensaje } from "./controllers/ControladorMensajes.js";
 
 connection()
 
@@ -16,8 +17,13 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-    console.log('Cliente conectado: ', socket)
-})
+  console.log('Cliente conectado: ', socket.id);
+  //Aqui va la parte del socket de mensajes xd 
+  //socket.on('enviar-mensaje', async (data) => {
+    //const mensajeGuardado = await guardarMensaje(data);
+    //io.emit(`mensaje-${data.receptor}`, mensajeGuardado);
+  //});
+});
 
 app.set('io', io)
 
