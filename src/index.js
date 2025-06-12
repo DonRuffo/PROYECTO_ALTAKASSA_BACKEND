@@ -18,11 +18,15 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log('Cliente conectado: ', socket.id);
-  //Aqui va la parte del socket de mensajes xd 
-  //socket.on('enviar-mensaje', async (data) => {
-    //const mensajeGuardado = await guardarMensaje(data);
-    //io.emit(`mensaje-${data.receptor}`, mensajeGuardado);
-  //});
+  
+  socket.on('registrar-usuario', (userId) => {
+    socket.join(userId);
+  });
+  
+  socket.on('enviar-mensaje', async (data) => {
+   
+    io.to(data.receptor).emit('nuevo-mensaje', data);
+  });
 });
 
 app.set('io', io)
