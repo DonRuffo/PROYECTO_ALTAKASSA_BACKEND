@@ -19,14 +19,6 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('Cliente conectado: ', socket.id);
   
-  socket.on('registrar-usuario', (userId) => {
-    socket.join(userId);
-  });
-  
-  socket.on('enviar-mensaje', async (data) => {
-   
-    io.to(data.receptor).emit('nuevo-mensaje', data);
-  });
 });
 
 app.set('io', io)

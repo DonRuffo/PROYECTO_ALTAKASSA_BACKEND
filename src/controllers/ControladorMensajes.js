@@ -31,25 +31,31 @@ const guardarMensaje = async (req, res) => {
 };
 
 const obtenerMensajes = async (req, res) => {
+    const usuarioID = req.usuarioBDD._id;
+    const io = req.app.get('io')
     try {
-        const { usuario1, usuario2 } = req.query;
-        if (!usuario1 || !usuario2) {
-            return res.status(400).json({ msg: "Faltan usuarios" });
+        if (!usuarioID) {
+            return res.status(400).json({ msg: "Falta ID del usuario" });
         }
 
-        const conversacion = await Conversacion.findOne({
-            participantes: { $all: [usuario1, usuario2], $size: 2 }
-        }).populate("mensajes.emisor", "nombre email");
+        const conversacion = await Conversacion.find({
+            participantes: usuarioID
+        })
+        .populate("participantes", "nombre apellido")
+        .populate("mensajes.emisor", "nombre apellido");
 
         if (!conversacion) {
+            io.emit('Conversaciones', { mensajes: [] });
             return res.json({ mensajes: [] });
         }
 
-        res.json({ mensajes: conversacion.mensajes });
+        io.emit('Conversaciones', { conversacion });
+        res.json({ conversacion });
     } catch (error) {
         res.status(500).json({ msg: "Error al obtener los mensajes", error });
     }
 };
+
 
 export { 
     guardarMensaje, 
