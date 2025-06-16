@@ -1,6 +1,7 @@
 import Conversacion from "../modules/ModeloMensajes.js";
 
 const guardarMensaje = async (req, res) => {
+    const io = req.app.get('io')
     try {
         const emisor = req.usuarioBDD._id;
         const { receptor, mensaje } = req.body;
@@ -23,6 +24,7 @@ const guardarMensaje = async (req, res) => {
                 mensajes: [nuevoMensaje]
             });
         }
+        io.emit('Mensaje', {conversacion})
 
         res.status(201).json(conversacion);
     } catch (error) {
@@ -32,7 +34,6 @@ const guardarMensaje = async (req, res) => {
 
 const obtenerMensajes = async (req, res) => {
     const usuarioID = req.usuarioBDD._id;
-    const io = req.app.get('io')
     try {
         if (!usuarioID) {
             return res.status(400).json({ msg: "Falta ID del usuario" });
@@ -40,16 +41,11 @@ const obtenerMensajes = async (req, res) => {
 
         const conversacion = await Conversacion.find({
             participantes: usuarioID
-        })
-        .populate("participantes", "nombre apellido")
-        .populate("mensajes.emisor", "nombre apellido");
+        });
 
         if (!conversacion) {
-            io.emit('Conversaciones', { mensajes: [] });
             return res.json({ mensajes: [] });
         }
-
-        io.emit('Conversaciones', { conversacion });
         res.json({ conversacion });
     } catch (error) {
         res.status(500).json({ msg: "Error al obtener los mensajes", error });
