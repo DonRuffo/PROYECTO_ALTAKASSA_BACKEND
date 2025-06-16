@@ -33,6 +33,7 @@ app.options('*', (req, res) => {
   res.status(204).send();
 });
 
+//función para proteger de DoDs
 
 app.use(rateLimit({
   windowMs:15*60*1000,
