@@ -26,7 +26,7 @@ const guardarMensaje = async (req, res) => {
         }
         io.emit('Mensaje', {conversacion})
 
-        res.status(201).json(conversacion);
+        res.status(201);
     } catch (error) {
         res.status(500).json({ msg: "Error al guardar el mensaje", error });
     }
