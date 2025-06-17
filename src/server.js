@@ -43,6 +43,7 @@ app.use(rateLimit({
   message: 'Demasiadas solicitudes. Inténtalo más tarde.'
 }))
 
+//morgan
 app.use(morgan('dev'))
 
 //seguridad
