@@ -11,7 +11,7 @@ const guardarMensaje = async (req, res) => {
 
         let conversacion = await Conversacion.findOne({
             participantes: { $all: [emisor, receptor], $size: 2 }
-        });
+        }).populate('participantes', 'nombre apellido f_perfil');
 
         const nuevoMensaje = { emisor, mensaje };
 
@@ -22,7 +22,8 @@ const guardarMensaje = async (req, res) => {
             conversacion = await Conversacion.create({
                 participantes: [emisor, receptor],
                 mensajes: [nuevoMensaje]
-            });
+            })
+            conversacion = conversacion.populate('participantes', 'nombre apellido f_perfil')
         }
         io.emit('Mensaje', {conversacion})
 
@@ -41,7 +42,7 @@ const obtenerMensajes = async (req, res) => {
 
         const conversacion = await Conversacion.find({
             participantes: usuarioID
-        });
+        }).populate('participantes', 'nombre apellido f_perfil');
 
         if (!conversacion) {
             return res.json({ mensajes: [] });
