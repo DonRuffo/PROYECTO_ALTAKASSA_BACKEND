@@ -4,6 +4,7 @@ import Ofertas from '../modules/ModeloOfertas.js'
 import Trabajos from '../modules/ModeloTrabajos.js'
 import ModuloUsuario from "../modules/ModuloUsuario.js";
 import { DateTime } from "luxon";
+import ModeloOfertas from "../modules/ModeloOfertas.js";
 
 const crearTrabajo = async (req, res) => {
     try {
@@ -30,7 +31,6 @@ const crearTrabajo = async (req, res) => {
             .populate('proveedor', 'nombre apellido email f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
 
-        io.emit('Trabajo-creado', { trabajoActual })
         io.emit('Nueva-solicitud', { trabajoActual })
         res.status(200).json({ msg: "Trabajo creado con exito" })
     } catch (error) {
@@ -177,9 +177,14 @@ const agendarTrabajo = async (req, res) => {
         trabajo.status = "Agendado";
         usuario.monedasTrabajos -= 1;
         const trabajoActualizado = await trabajo.save();
+        await usuario.save()
+
+        const ofertaResp = await ModeloOfertas.findById(trabajoActualizado.oferta._id)
+            .populate('proveedor', 'nombre apellido monedasTrabajos f_perfil')
 
         io.emit('Trabajo-agendado', { id, trabajoActualizado })
-        await usuario.save()
+        io.emit('Remover-oferta', { ofertaResp })
+
         res.status(200).json({
             msg: "Has aceptado la solicitud",
             trabajoActualizado
@@ -223,8 +228,8 @@ const cancelarTrabajo = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: "Trabajo no encontrado" });
         if (!mongoose.Types.ObjectId.isValid(proveedor)) return res.status(404).json({ msg: "Proveedor no encontrado" });
         const trabajo = await ModeloTrabajos.findById(id)
-            .populate('cliente', 'nombre apellido email f_perfil')
-            .populate('proveedor', 'nombre apellido email f_perfil')
+            .populate('cliente', 'nombre apellido f_perfil')
+            .populate('proveedor', 'nombre apellido f_perfil')
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
 
         const usuario = await ModuloUsuario.findById(proveedor)
@@ -234,7 +239,11 @@ const cancelarTrabajo = async (req, res) => {
         usuario.monedasTrabajos += 1;
         const trabajoActualizado = await trabajo.save();
         await usuario.save()
+
+        const ofertaResp = await ModeloOfertas.findById(trabajoActualizado.oferta._id)
+            .populate('proveedor', 'nombre apellido monedasTrabajos f_perfil')
         io.emit('Trabajo-cancelado', { id, trabajoActualizado })
+        io.emit('Restablecer-oferta', { ofertaResp })
         res.status(200).json({
             msg: "Has cancelado el trabajo",
             trabajoActualizado
