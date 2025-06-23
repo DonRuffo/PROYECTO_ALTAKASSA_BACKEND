@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { actualizarTrabajo, agendarTrabajo, cancelarTrabajo, crearTrabajo, eliminarTrabajo, obtenerTrabajo, obtenerTrabajosDeUnProveedor, obtenerTrabajosPorCliente, obtenerTrabajosPorProveedor, rechazarTrabajo } from "../controllers/controladorTrabajos.js";
+import { actualizarTrabajo, agendarTrabajo, calificarCliente, calificarProveedor, cancelarTrabajo, crearTrabajo, eliminarTrabajo, obtenerTrabajo, obtenerTrabajosDeUnProveedor, obtenerTrabajosPorCliente, obtenerTrabajosPorProveedor, rechazarTrabajo } from "../controllers/controladorTrabajos.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 import { validacionActualizarTrabajo, validacionCrearTrabajo } from "../validation/validationTrabajos.js";
 
@@ -15,6 +15,8 @@ routerTrabajos.get('/trabajos-cliente', verificarAutenticacion, obtenerTrabajosP
 routerTrabajos.put('/agendarTrabajo/:id',verificarAutenticacion, agendarTrabajo)
 routerTrabajos.put('/rechazarTrabajo/:id',verificarAutenticacion, rechazarTrabajo)
 routerTrabajos.put('/cancelarTrabajo/:id', verificarAutenticacion, cancelarTrabajo)
+routerTrabajos.post('/calificarProveedor/:id', verificarAutenticacion, calificarProveedor)
+routerTrabajos.post('/calificarCliente/:id', verificarAutenticacion, calificarCliente)
 
 
 export default routerTrabajos

@@ -74,14 +74,16 @@ const Usuario = new Schema({
         type: Number,
         default: 5
     },
-    calificacionCliente: {
+    promedioCliente: {
         type: Number,
         default: 5
     },
-    calificacionProveedor: {
+    promedioProveedor: {
         type: Number,
         default: 5
     },
+    calificacionesProveedor: [Number],
+    calificacionesCliente: [Number],
     ofertas: [
         {
             type: mongoose.Schema.Types.ObjectId,

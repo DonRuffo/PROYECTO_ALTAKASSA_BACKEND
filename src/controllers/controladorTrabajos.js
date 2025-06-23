@@ -240,8 +240,8 @@ const cancelarTrabajo = async (req, res) => {
         const trabajoActualizado = await trabajo.save();
         await usuario.save()
 
-        const ofertaResp = await ModeloOfertas.findById(trabajoActualizado.oferta._id)
-            .populate('proveedor', 'nombre apellido monedasTrabajos f_perfil')
+        const ofertaResp = await ModeloOfertas.find({proveedor: proveedor})
+            .populate('proveedor', 'nombre apellido monedasTrabajos promedioProveedor f_perfil')
         io.emit('Trabajo-cancelado', { id, trabajoActualizado })
         io.emit('Restablecer-oferta', { ofertaResp })
         res.status(200).json({
@@ -252,6 +252,64 @@ const cancelarTrabajo = async (req, res) => {
         console.log(error);
         res.status(500).json({ msg: "Error al actualizar el estado del trabajo" });
     }
+}
+
+const calificarProveedor = async (req, res) => {
+    if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Calificar por favor" })
+    const { calificacionProveedor } = req.body
+    const { id } = req.params;
+
+    try {
+        if (!id) return res.status(400).json({ msg: "ID del proveedor requerido" })
+
+        const usuario = await ModuloUsuario.findById(id)
+        if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" })
+
+        const calificaciones = usuario.calificacionesProveedor.length
+        if(calificaciones === 0) {
+            usuario.promedioProveedor = calificacionProveedor
+            usuario.calificacionesProveedor.push(calificacionProveedor)
+        } else {
+            const sumaCalificaciones = usuario.calificacionesProveedor.reduce((a, b) => a + b, 0)
+            const nuevoPromedio = (sumaCalificaciones + calificacionProveedor) / (calificaciones + 1)
+            usuario.promedioProveedor = nuevoPromedio
+            usuario.calificacionesProveedor.push(calificacionProveedor)
+        }
+        await usuario.save()
+        res.status(200).json({ msg: "Calificación enviada" })
+    } catch (error) {
+        res.status(500).json({ msg: "Error al calificar al proveedor", error })
+    }
+
+}
+
+const calificarCliente = async (req, res) => {
+    if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Calificar por favor" })
+    const { calificacionCliente } = req.body
+    const { id } = req.params;
+
+    try {
+        if (!id) return res.status(400).json({ msg: "ID del cliente requerido" })
+
+        const usuario = await ModuloUsuario.findById(id)
+        if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" })
+
+        const calificaciones = usuario.calificacionesCliente.length
+        if(calificaciones === 0) {
+            usuario.promedioCliente = calificacionCliente
+            usuario.calificacionesCliente.push(calificacionCliente)
+        } else {
+            const sumaCalificaciones = usuario.calificacionesCliente.reduce((a, b) => a + b, 0)
+            const nuevoPromedio = (sumaCalificaciones + calificacionCliente) / (calificaciones + 1)
+            usuario.promedioCliente = nuevoPromedio
+            usuario.calificacionesCliente.push(calificacionCliente)
+        }
+        await usuario.save()
+        res.status(200).json({ msg: "Calificación enviada" })
+    } catch (error) {
+        res.status(500).json({ msg: "Error al calificar al cliente", error })
+    }
+
 }
 
 
@@ -265,5 +323,7 @@ export {
     agendarTrabajo,
     rechazarTrabajo,
     cancelarTrabajo,
-    obtenerTrabajosDeUnProveedor
+    obtenerTrabajosDeUnProveedor,
+    calificarProveedor,
+    calificarCliente
 }
