@@ -28,7 +28,7 @@ const crearOferta = async (req, res) => {
 
         usuario.cantidadOfertas -= 1
         await usuario.save()
-        const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos')
+        const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos promedioProveedor')
         io.emit('Nueva-Oferta', { ofertaPop })
 
     } catch (error) {
@@ -58,7 +58,7 @@ const actualizarOferta = async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "ID no válido" })
 
-        const ofertaActual = await ModeloOfertas.findById(id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos');
+        const ofertaActual = await ModeloOfertas.findById(id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos promedioProveedor');
 
         if (!ofertaActual) return res.status(404).json({ msg: "Oferta no encontrada" })
 
@@ -121,7 +121,7 @@ const misOfertas = async (req, res) => {
 
 const listarOfertas = async (req, res) => {
     try {
-        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos calificacionProveedor');
+        const ofertas = await ModeloOfertas.find().populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos calificacionProveedor promedioProveedor');
         const ofertasFiltradas = ofertas.filter((of) => of.proveedor.monedasTrabajos !== 0)
         res.status(200).json(ofertasFiltradas);
     } catch (error) {

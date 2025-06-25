@@ -258,11 +258,17 @@ const calificarProveedor = async (req, res) => {
     if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Calificar por favor" })
     const { calificacionProveedor } = req.body
     const { id } = req.params;
+    const io = req.app.get('io')
 
     try {
         if (!id) return res.status(400).json({ msg: "ID del proveedor requerido" })
 
-        const usuario = await ModuloUsuario.findById(id)
+        const trabajo = await ModeloTrabajos.findById(id)
+        .populate('proveedor', 'nombre apellido email f_perfil calificacionesProveedor promedioProveedor')
+        .populate('cliente', 'nombre apellido email f_perfil calificacionesCliente promedioCliente')
+        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
+
+        const usuario = await ModuloUsuario.findById(trabajo.proveedor._id)
         if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" })
 
         const calificaciones = usuario.calificacionesProveedor.length
@@ -275,6 +281,11 @@ const calificarProveedor = async (req, res) => {
             usuario.promedioProveedor = nuevoPromedio
             usuario.calificacionesProveedor.push(calificacionProveedor)
         }
+
+        trabajo.status = "Completado"
+
+        io.emit('Trabajo-completado', { id, trabajo })
+        await trabajo.save()
         await usuario.save()
         res.status(200).json({ msg: "Calificación enviada" })
     } catch (error) {
@@ -287,13 +298,19 @@ const calificarCliente = async (req, res) => {
     if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Calificar por favor" })
     const { calificacionCliente } = req.body
     const { id } = req.params;
+    const io = req.app.get('io')
+    
 
     try {
         if (!id) return res.status(400).json({ msg: "ID del cliente requerido" })
 
-        const usuario = await ModuloUsuario.findById(id)
-        if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" })
+        const trabajo = await ModeloTrabajos.findById(id)
+        .populate('cliente', 'nombre apellido f_perfil calificacionesCliente promedioCliente')
+        .populate('proveedor', 'nombre apellido f_perfil calificacionesProveedor promedioProveedor')
+        if (!trabajo) return res.status(404).json({ msg: "Trabajo no encontrado" })
 
+        const usuario = await ModuloUsuario.findById(trabajo.cliente._id)
+        if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" })
         const calificaciones = usuario.calificacionesCliente.length
         if(calificaciones === 0) {
             usuario.promedioCliente = calificacionCliente
@@ -304,6 +321,10 @@ const calificarCliente = async (req, res) => {
             usuario.promedioCliente = nuevoPromedio
             usuario.calificacionesCliente.push(calificacionCliente)
         }
+
+        trabajo.status = "Completado"
+        io.emit('Trabajo-completado-prov', { id, trabajo })
+        await trabajo.save()
         await usuario.save()
         res.status(200).json({ msg: "Calificación enviada" })
     } catch (error) {
