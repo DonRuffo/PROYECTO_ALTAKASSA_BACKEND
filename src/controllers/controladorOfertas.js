@@ -1,6 +1,7 @@
 import ModeloOfertas from "../modules/ModeloOfertas.js";
 import mongoose from "mongoose";
 import ModuloUsuario from "../modules/ModuloUsuario.js";
+import ModuloCategorias from "../modules/ModuloCategorias.js";
 
 const crearOferta = async (req, res) => {
     const { precioPorDia, precioPorHora, servicio, descripcion, servicios } = req.body;
@@ -11,6 +12,8 @@ const crearOferta = async (req, res) => {
         return res.status(403).json({ msg: "Has alcanzado el límite de ofertas." });
     }
 
+    const categoria = await ModuloCategorias.findOne({nombre:servicio});
+    if(!categoria) return res.status(404).json({ msg: "Categoría no encontrada." });
     try {
         if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debe llenar todo los campos." })
 
@@ -27,6 +30,8 @@ const crearOferta = async (req, res) => {
         res.status(200).json({ msg: "Oferta creada correctamente.", oferta: nuevaOferta })
 
         usuario.cantidadOfertas -= 1
+        categoria.suscripciones += 1
+        await categoria.save()
         await usuario.save()
         const ofertaPop = await ModeloOfertas.findById(nuevaOferta._id).populate('proveedor', 'nombre apellido email f_perfil monedasTrabajos promedioProveedor')
         io.emit('Nueva-Oferta', { ofertaPop })
