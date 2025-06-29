@@ -23,7 +23,7 @@ const guardarMensaje = async (req, res) => {
                 participantes: [emisor, receptor],
                 mensajes: [nuevoMensaje]
             })
-            conversacion = conversacion.populate('participantes', 'nombre apellido f_perfil')
+            conversacion = await Conversacion.findById(conversacion._id).populate('participantes', 'nombre apellido f_perfil');
         }
         io.emit('Mensaje', {conversacion})
 

@@ -19,7 +19,7 @@ const registroUsuario = async (req, res) => {
 
     await sendMailToAdmin(email, token)
 
-    res.status(200).json({ msg: "Revisa tu correo electronico para confirmar tu cuenta", rol: nuevoUsuario.rol })
+    res.status(200).json({ msg: "Revisa tu correo electrónico para confirmar tu cuenta", rol: nuevoUsuario.rol })
 }
 const confirmarEmail = async (req, res) => {
     const { token } = req.params
@@ -42,7 +42,7 @@ const loginUsuario = async (req, res) => {
 
     const UsuarioBDD = await ModuloUsuario.findOne({ email })
     if (UsuarioBDD?.confirmarEmail == false) return res.status(400).json({ msg: "Lo sentimos, debe verificar su cuenta" })
-    if (!UsuarioBDD) return res.status(403).json({ msg: "Lo sentimos, el Usuario no se encuentra registrado" })
+    if (!UsuarioBDD) return res.status(403).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" })
 
     const verificarPassword = await UsuarioBDD.CompararPasswordUsuario(contrasenia)
     if (!verificarPassword) return res.status(404).json({ msg: "Lo sentimos, la contraseña no es correcta" })
@@ -76,6 +76,7 @@ const ActualizarContraseniaUsuario = async (req, res) => {
     const { email } = req.usuarioBDD
     const { contrasenia, nuevaContrasenia } = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({ msg: "Llenar los campos vacíos" })
+    if( contrasenia === nuevaContrasenia) return res.status(404).json({ msg: "La nueva contraseña no puede ser igual a la actual" })
     const UsuarioBDD = await ModuloUsuario.findOne({ email })
     if (!UsuarioBDD) return res.status(404).json({ msg: "No existe esta cuenta" })
     const Verificacion = await UsuarioBDD.CompararPasswordUsuario(contrasenia)

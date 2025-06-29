@@ -4,6 +4,7 @@ import ModeloPlanes from "../modules/ModeloPlanes.js";
 import generarJWT from "../helpers/crearJWT.js";
 import ModuloUsuario from "../modules/ModuloUsuario.js";
 import ModeloOfertas from "../modules/ModeloOfertas.js";
+import ModeloSugerencias from "../modules/ModeloSugerencias.js";
 
 const register = async (req, res) => {
     const { email, contrasenia } = req.body
@@ -234,6 +235,21 @@ const detallesDelUsuario = async(req, res) =>{
     res.status(200).json({usuario, ofertas})
 }
 
+const verSugerencias = async (req, res) => {
+    const sugerencias = await ModeloSugerencias.find()
+    res.status(200).json(sugerencias);
+}
+
+const sugerenciasPorUsuario = async (req, res) => {
+    const { id } = req.params;
+    if (!id) return res.status(404).json({ msg: 'No existe el ID' });
+
+    const usuario = await ModuloUsuario.findById(id);
+    if (!usuario) return res.status(404).json({ msg: 'El usuario no existe' });
+
+    const sugerencias = await ModeloSugerencias.find({ email: usuario.email });
+    res.status(200).json(sugerencias);
+}
 
 export {
     register,
@@ -252,5 +268,7 @@ export {
     listarUsuarios,
     eliminarUsuario,
     obtenerPlan,
-    detallesDelUsuario
+    detallesDelUsuario,
+    verSugerencias,
+    sugerenciasPorUsuario
 }

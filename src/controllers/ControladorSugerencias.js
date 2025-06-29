@@ -8,7 +8,12 @@ const EnviarComentarios = async (req, res) => {
     if (SugerenciasBDD) {
         Object.keys(req.body).forEach((key) => {
             if (req.body[key]) {
-                SugerenciasBDD[key] = req.body[key]
+                if (key === 'comentarios') {
+                    SugerenciasBDD[key].push(req.body[key])
+                }else{
+                  SugerenciasBDD[key] = req.body[key]  
+                }
+                
             }
         })
         await SugerenciasBDD.save()

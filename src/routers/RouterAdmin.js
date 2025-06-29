@@ -17,6 +17,8 @@ import {
     eliminarUsuario,
     obtenerPlan,
     detallesDelUsuario,
+    verSugerencias,
+    sugerenciasPorUsuario,
 } from "../controllers/ControladorAdmin.js";
 import verificarAutenticacion from "../middleware/autenticacion.js";
 
@@ -43,5 +45,7 @@ router.delete('/eliminarPlan/:id', verificarAutenticacion, eliminarPlan)
 router.get('/listarUsuarios', verificarAutenticacion, listarUsuarios)
 router.delete('/eliminarUser/:id', verificarAutenticacion, eliminarUsuario)
 router.get('/detalleUsers/:id', verificarAutenticacion, detallesDelUsuario)
+router.get('/verSugerencias', verificarAutenticacion, verSugerencias)
+router.get('/sugerenciasPorUsuario/:id', verificarAutenticacion, sugerenciasPorUsuario)
 
 export default router

@@ -1,29 +1,21 @@
 import { Schema, model } from 'mongoose'
 
 const SugerenciasSchema = new Schema({
-    email: {
+    email:{
         type: String,
-        require: true
-    },
-    rol: {
-        type: String,
-        require: true
+        required: true,
+        unique: true
     },
     nombre: {
         type: String,
-        require: true
+        required: true
     },
     experiencia: {
         type: String,
-        require: true,
+        required: true,
         default: null
     },
-    comentario: {
-        type: String,
-        require: true,
-        trim: true,
-        default: null
-    }
+    comentarios:[String]
 },
     { timestamps: true }
 )
