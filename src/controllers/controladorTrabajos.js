@@ -281,7 +281,7 @@ const calificarProveedor = async (req, res) => {
             usuario.promedioProveedor = nuevoPromedio
             usuario.calificacionesProveedor.push(calificacionProveedor)
         }
-
+        trabajo.calificacionProveedor = calificacionProveedor
         trabajo.status = "Completado"
 
         io.emit('Trabajo-completado', { id, trabajo })
@@ -321,7 +321,7 @@ const calificarCliente = async (req, res) => {
             usuario.promedioCliente = nuevoPromedio
             usuario.calificacionesCliente.push(calificacionCliente)
         }
-
+        trabajo.calificacionCliente = calificacionCliente;
         trabajo.status = "Completado"
         io.emit('Trabajo-completado-prov', { id, trabajo })
         await trabajo.save()

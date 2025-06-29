@@ -125,10 +125,10 @@ const validacionActualizarPassUsuario = () => {
         check('nuevaContrasenia')
         .trim()
         .notEmpty().withMessage('La contraseña es obligatoria')
-        .isLength({ min: 10 }).withMessage('La contraseña debe tener al menos 10 caracteres')
-        .matches(/[A-Z]/).withMessage('La contraseña debe contener al menos una letra mayúscula')
-        .matches(/[a-z]/).withMessage('La contraseña debe contener al menos una letra minúscula')
-        .matches(/[0-9]/).withMessage('La contraseña debe contener al menos un número'),
+        .isLength({ min: 10 }).withMessage('Formato de contraseña inválido')
+        .matches(/[A-Z]/).withMessage('Formato de contraseña inválido')
+        .matches(/[a-z]/).withMessage('Formato de contraseña inválido')
+        .matches(/[0-9]/).withMessage('Formato de contraseña inválido'),
 
         (req,res,next) => {
             const errores = validationResult(req)

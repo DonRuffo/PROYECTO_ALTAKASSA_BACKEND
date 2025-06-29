@@ -15,7 +15,16 @@ const SugerenciasSchema = new Schema({
         required: true,
         default: null
     },
-    comentarios:[String]
+    comentarios:[{
+        fecha: {
+            type: Date,
+            default: Date.now
+        },
+        comentario: {
+            type: String,
+            required: true
+        }
+    }]
 },
     { timestamps: true }
 )
