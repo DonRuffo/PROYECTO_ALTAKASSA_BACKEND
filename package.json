@@ -35,5 +35,9 @@
     "socket.io": "^4.8.1",
     "stripe": "^17.7.0",
     "url": "^0.11.4"
+  },
+  "devDependencies": {
+    "jest": "^30.0.3",
+    "supertest": "^7.1.1"
   }
 }
