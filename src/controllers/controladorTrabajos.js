@@ -179,7 +179,7 @@ const agendarTrabajo = async (req, res) => {
         const trabajoActualizado = await trabajo.save();
         await usuario.save()
 
-        const ofertaResp = await ModeloOfertas.findById(trabajoActualizado.oferta._id)
+        const ofertaResp = await ModeloOfertas.find({proveedor:req.usuarioBDD._id})
             .populate('proveedor', 'nombre apellido monedasTrabajos f_perfil')
 
         io.emit('Trabajo-agendado', { id, trabajoActualizado })
