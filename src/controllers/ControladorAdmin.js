@@ -5,6 +5,7 @@ import generarJWT from "../helpers/crearJWT.js";
 import ModuloUsuario from "../modules/ModuloUsuario.js";
 import ModeloOfertas from "../modules/ModeloOfertas.js";
 import ModeloSugerencias from "../modules/ModeloSugerencias.js";
+import ModeloTrabajos from "../modules/ModeloTrabajos.js";
 
 const register = async (req, res) => {
     const { email, contrasenia } = req.body
