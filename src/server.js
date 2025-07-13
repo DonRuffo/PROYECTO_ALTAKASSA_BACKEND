@@ -37,7 +37,7 @@ app.options('*', (req, res) => {
 
 app.use(rateLimit({
   windowMs:15*60*1000,
-  max:325,
+  max:500,
   standardHeaders: true,
   legacyHeaders: false,
   message: 'Demasiadas solicitudes. Inténtalo más tarde.'
