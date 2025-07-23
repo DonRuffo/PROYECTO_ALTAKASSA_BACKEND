@@ -32,10 +32,10 @@ const crearTrabajo = async (req, res) => {
             .populate('oferta', 'servicio precioPorDia precioPorHora descripcion')
 
         io.emit('Nueva-solicitud', { trabajoActual })
-        res.status(200).json({ msg: "Trabajo creado con exito" })
+        res.status(200).json({ msg: "Solicitud enviada" })
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "Error al crear el trabajo" })
+        res.status(500).json({ msg: "Error al enviar la solicitud" })
     }
 }
 
@@ -129,12 +129,12 @@ const actualizarTrabajo = async (req, res) => {
 
         io.emit('Trabajo-actualizado', { id, trabajoActualizado })
         res.status(200).json({
-            msg: "Trabajo actualizado correctamente",
+            msg: "Solicitud actualizada",
             trabajoActualizado
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "Error al actualizar el trabajo" })
+        res.status(500).json({ msg: "Error al actualizar la solicitud" })
     }
 }
 
