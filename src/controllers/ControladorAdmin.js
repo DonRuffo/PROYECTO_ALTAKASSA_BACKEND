@@ -216,6 +216,7 @@ const eliminarUsuario = async (req, res) => {
         if (!usuario) return res.status(404).json({ msg: "No se encuentra el usuario" })
         await ModeloOfertas.deleteMany({proveedor:id})
         await ModeloTrabajos.deleteMany({proveedor:id})
+        await ModeloTrabajos.deleteMany({cliente:id})
 
         io.emit('Usuario eliminado', {id})
         res.status(200).json({ msg: "Usuario eliminado" })
